@@ -1,0 +1,11 @@
+{
+    "images": ["static/img/general/preloader/progress.png"],
+    "frames": {
+        "width": 818,
+        "height": 45,
+        "count": 24
+    },
+    "animations": {
+        "run": [0, 23]
+    }
+}
