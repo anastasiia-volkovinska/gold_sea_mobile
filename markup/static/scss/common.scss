@@ -4,9 +4,9 @@ html, body {
     height: 100%;
 }
 
-.page {
-    
-}
+@font-face {
+  font-family: "Titania";
+  src: url("../fonts/Titania-Regular.ttf"); }
 
 .page__wrapper {
     min-height: 100%;
@@ -15,8 +15,4 @@ html, body {
 
 * html .page__wrapper {
     height: 100%;
-}
-
-.page__buffer {
-    height: 50px;
 }

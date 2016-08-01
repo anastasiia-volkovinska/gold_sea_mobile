@@ -1,9 +1,12 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-invalid-this */
+
 const preloaderManifest = [
-    {id: 'preloaderBG', src: 'static/img/general/preloader/preload_bg.png'},
-    {id: 'preloaderPlay', src: 'static/img/general/preloader/play.png'},
-    {id: 'preloaderLogo', src: 'static/img/general/preloader/logo_gs.png'},
-    {id: 'preloaderLogoBrands', src: 'static/img/general/preloader/logosbrands.png'},
-    {id: 'preloaderSpriteSheet', src: 'static/img/general/preloader/progress.json', type: 'spritesheet'},
+    {id: 'preloaderBG', src: 'static/img/content/preloader/preloaderBG.png'},
+    {id: 'preloaderPlay', src: 'static/img/content/preloader/preloaderPlay.png'},
+    {id: 'preloaderLogo', src: 'static/img/content/preloader/preloaderLogo.png'},
+    {id: 'preloaderLogoBrands', src: 'static/img/content/preloader/preloaderLogoBrands.png'},
+    {id: 'preloaderSprite', src: 'static/img/content/preloader/preloaderSprite.json', type: 'spritesheet'}
 ];
 
 const mainManifest = [
@@ -43,26 +46,141 @@ const mainManifest = [
 
 let preloader = ( function () {
 
-    let filesLoaded = 0;
+    // Stage
+    let stage;
+
+    // Data
     let loadResult;
 
-    let bonusStaticStage;
-    let bonusStage;
+    // Counter
+    let filesLoaded = 0;
 
     function downloadManifest() {
-        console.log('i am here');
-        /* eslint-disable */
-        const queue = new createjs.LoadQueue(true);
-        queue.setMaxConnections(4);
-        queue.loadManifest(preloaderManifest);
-        queue.on('complete', showPreloader);
-        /* eslint-enable */
+        /* eslint-disable no-undef */
+        /* eslint-disable no-use-before-define */
+        const loader = new createjs.LoadQueue(true);
+        loader.setMaxConnections(4);
+        loader.loadManifest(preloaderManifest);
+        loader.on('complete', showPreloader);
+    }
+
+    function showPreloader(event) {
+        stage = canvas.getStages().bonusStage;
+        const loader = event.target;
+
+        const preloaderBG = new createjs.Bitmap(loader.getResult('preloaderBG')).set({
+            name: 'preloaderBG'
+        });
+        const preloaderLogo = new createjs.Bitmap(loader.getResult('preloaderLogo')).set({
+            name: 'preloaderLogo',
+            x: (1280 - 757) / 2,
+            y: 65
+        });
+
+        const preloaderLogoBrands = new createjs.Bitmap(loader.getResult('preloaderLogoBrands')).set({
+            name: 'preloaderLogoBrands',
+            x: 1100,
+            y: 20,
+            alpha: 0.75,
+            scaleX: 0.75,
+            scaleY: 0.75
+        });
+
+        const preloaderPlay = new createjs.Bitmap(loader.getResult('preloaderPlay')).set({
+            name: 'preloaderPlay',
+            x: (1280 - 265) / 2,
+            y: 310,
+            shadow: new createjs.Shadow('#C19433', 0, 0, 15),
+            alpha: 0
+        });
+
+        const preloaderSprite = new createjs.Sprite(loader.getResult('preloaderSprite')).set({
+            name: 'preloaderSprite',
+            x: (1280 - 630) / 2 - 100,
+            y: 450
+        });
+
+        const preloaderContainer = new createjs.Container().set({
+            name: 'preloaderContainer'
+        });
+
+        preloaderContainer.addChild(preloaderBG, preloaderLogo, preloaderPlay, preloaderLogoBrands, preloaderSprite);
+
+        stage.addChild(preloaderContainer);
+
+        mainPreload(preloaderContainer);
+
+    }
+
+    function mainPreload(container) {
+        const sprite = container.getChildByName('preloaderSprite');
+        const loader = new createjs.LoadQueue(true);
+
+        loader.setMaxConnections(20);
+        loader.loadManifest(mainManifest);
+
+        loader.on('fileload', handleFileLoad, loader, false, {
+            sprite
+        });
+        loader.on('complete', handleLoadComplete, loader, true, {
+            container
+        });
+    }
+
+    function handleFileLoad(event, data) {
+        // Change counter of downloaded files
+        filesLoaded++;
+
+        let sprite = data.sprite;
+        let filesNumber = mainManifest.length;
+        let framesNumber = sprite.spriteSheet.getNumFrames('run');
+        let currentFrame = Math.ceil((filesLoaded / filesNumber) * framesNumber) - 1;
+
+        sprite.gotoAndStop(currentFrame);
+    }
+
+    function handleLoadComplete(event, data) {
+        const container = data.container;
+        const sprite = container.getChildByName('preloaderSprite');
+        const play = container.getChildByName('preloaderPlay');
+
+        createjs.Tween.get(play).to({alpha: 1}, 500);
+
+        sprite.stop();
+        createjs.Tween.get(sprite, {loop: true})
+            .to({alpha: 0.8}, 400)
+            .to({alpha: 1}, 400);
+
+        loadResult = event.target;
+
+        events.trigger('preloadComplete', loadResult);
+
+        play.on('click', handlePlayClick, this, true, {
+            container
+        });
+    }
+
+    function handlePlayClick(event, data) {
+        const container = data.container;
+        const game = document.querySelector('#game');
+        canvas.launchFullScreen(game);
+        createjs.Tween.get(container)
+        .to({alpha: 0}, 1000, createjs.Ease.circIn)
+        .call(function () {
+            stage.removeAllChildren();
+        });
+    }
+
+    function getLoadResult() {
+        return utils.getData(loadResult);
     }
 
     /* eslint-disable */
     events.on('initPreloader', downloadManifest);
     /* eslint-enable */
-
+    return {
+        getLoadResult
+    };
 })();
 
-events.trigger('initPreloader');
+// events.trigger('initPreloader'); // КОСТЫЛЬ, вызывается в модуле инициализации

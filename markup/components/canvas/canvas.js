@@ -51,7 +51,10 @@ let canvas = (function () {
     /* eslint-enable */
 
     return {
+        initStages, // КОСТЫЛЬ
         getStages,
         launchFullScreen
     };
 })();
+
+// events.trigger('initStages', canvas.initStages); //КОСТЫЛЬ, вызывается в модуле инициализации
