@@ -26,116 +26,116 @@ let lines = (function () {
     let winFinishData = [];
 
     let parameters = {
-        font: 'normal 15px Arial',
-        color: 'gold',
+        font: 'bold 18px Arial',
+        color: '#ddd',
         1: {
-            x: 95,
-            y: 336,
+            x: 87,
+            y: 294,
             textBaseline: 'middle'
         },
         2: {
             x: 1072,
-            y: 187,
+            y: 148,
             textBaseline: 'middle'
         },
         3: {
             x: 1072,
-            y: 516,
+            y: 473,
             textBaseline: 'middle'
         },
         4: {
-            x: 95,
-            y: 118,
+            x: 87,
+            y: 80,
             textBaseline: 'middle'
         },
         5: {
-            x: 95,
-            y: 585,
+            x: 87,
+            y: 508,
             textBaseline: 'middle'
         },
         6: {
-            x: 95,
-            y: 152,
+            x: 87,
+            y: 114,
             textBaseline: 'middle'
         },
         7: {
-            x: 95,
-            y: 550,
+            x: 87,
+            y: 473,
             textBaseline: 'middle'
         },
         8: {
             x: 1072,
-            y: 405,
+            y: 363,
             textBaseline: 'middle'
         },
         9: {
-            x: 95,
-            y: 301,
+            x: 87,
+            y: 260,
             textBaseline: 'middle'
         },
         10: {
-            x: 95,
-            y: 481,
+            x: 87,
+            y: 440,
             textBaseline: 'middle'
         },
         11: {
-            x: 95,
-            y: 222,
+            x: 87,
+            y: 181,
             textBaseline: 'middle'
         },
         12: {
             x: 1072,
-            y: 585,
+            y: 541,
             textBaseline: 'middle'
         },
         13: {
             x: 1072,
-            y: 118,
+            y: 80,
             textBaseline: 'middle'
         },
         14: {
             x: 1072,
-            y: 551,
+            y: 508,
             textBaseline: 'middle'
         },
         15: {
             x: 1072,
-            y: 153,
+            y: 114,
             textBaseline: 'middle'
         },
         16: {
             x: 1072,
-            y: 481,
+            y: 440,
             textBaseline: 'middle'
         },
         17: {
             x: 1072,
-            y: 222,
+            y: 181,
             textBaseline: 'middle'
         },
         18: {
-            x: 95,
-            y: 187,
+            x: 87,
+            y: 148,
             textBaseline: 'middle'
         },
         19: {
-            x: 95,
-            y: 516,
+            x: 87,
+            y: 541,
             textBaseline: 'middle'
         },
         20: {
-            x: 95,
-            y: 370,
+            x: 87,
+            y: 328,
             textBaseline: 'middle'
         },
         21: {
             x: 1072,
-            y: 370,
+            y: 329,
             textBaseline: 'middle'
         },
         22: {
             x: 1072,
-            y: 336,
+            y: 295,
             textBaseline: 'middle'
         }
     };
@@ -237,7 +237,7 @@ let lines = (function () {
                 name: 'linesNumber_' + (i + 1),
                 textAlign: 'center',
                 /* eslint-disable */
-                shadow: new createjs.Shadow('#C19433', 0, 0, 8)
+                shadow: new createjs.Shadow('#0f334c', 0, 0, 5)
                 /* eslint-enable */
             });
             if (i === len) {
@@ -249,8 +249,8 @@ let lines = (function () {
                 x: parameters[i + 1].x,
                 y: parameters[i + 1].y,
                 name: 'linesDisc_' + (i + 1),
-                regX: 11,
-                regY: 0
+                regX: 15,
+                regY: 5
             });
             linesEls.linesDiscs.push(linesDisc);
             linesEls.linesNumbers.push(linesNumber);
@@ -278,28 +278,35 @@ let lines = (function () {
             let loader = preloader.getLoadResult();
             let totalWin = new createjs.Container().set({
                 /* eslint-enable */
-                name: 'totalWin',
-                x: (960 - 176) / 2 + 3,
-                y: (540 - 150) / 2
+                name: 'totalWin'
+                // x: (960 - 176) / 2 + 3,
+                // y: (540 - 150) / 2
             });
             /* eslint-disable */
-            let totalWinText = new createjs.Text(win, 'bold 75px Arial', '#f0e194').set({
-                /* eslint-enable */
-                x: 88,
-                y: 75,
+            let totalWinText = new createjs.BitmapText(win+'', loader.getResult('winTotal')).set({
                 name: 'totalWinText',
-                textAlign: 'center',
-                textBaseline: 'middle',
-                /* eslint-disable */
-                shadow: new createjs.Shadow('#C19433', 0, 0, 8)
-                /* eslint-enable */
             });
-            /* eslint-disable */
-            let totalWinRect = new createjs.Bitmap(loader.getResult('winTotalRect')).set({
-                /* eslint-enable */
-                name: 'totalWinRect'
-            });
-            totalWin.addChild(totalWinRect, totalWinText);
+            totalWinText.x = (1280 - totalWinText.getBounds().width) / 2;
+            totalWinText.y = (720 - totalWinText.getBounds().height) / 2;
+            totalWinText.regX = totalWinText.getBounds().width / 2;
+            totalWinText.regY = totalWinText.getBounds().height / 2;
+            // let totalWinText = new createjs.Text(win, 'bold 75px Arial', '#f0e194').set({
+            //     /* eslint-enable */
+            //     x: 88,
+            //     y: 75,
+            //     name: 'totalWinText',
+            //     textAlign: 'center',
+            //     textBaseline: 'middle',
+            //     /* eslint-disable */
+            //     shadow: new createjs.Shadow('#C19433', 0, 0, 8)
+            //     /* eslint-enable */
+            // });
+            // /* eslint-disable */
+            // let totalWinRect = new createjs.Bitmap(loader.getResult('winTotalRect')).set({
+            //     /* eslint-enable */
+            //     name: 'totalWinRect'
+            // });
+            totalWin.addChild(totalWinText);
             return totalWin;
         } else {
             return;
@@ -444,14 +451,14 @@ let lines = (function () {
         let winLineRect = new createjs.Bitmap(loader.getResult('winLineRect')).set({
             /* eslint-enable */
             name: 'winLineRect',
-            scaleX: 1.8,
-            scaleY: 1.8
+            scaleX: 1,
+            scaleY: 1
         });
         /* eslint-disable */
-        let winLineText = new createjs.Text(win, 'bold 35px Arial', '#f0e194').set({
+        let winLineText = new createjs.Text(win, 'bold 32px Arial', '#ddd').set({
             /* eslint-enable */
-            x: 30,
-            y: 23,
+            x: 25,
+            y: 25,
             textAlign: 'center',
             textBaseline: 'middle',
             name: 'winLineText',
@@ -482,7 +489,7 @@ let lines = (function () {
         for (let j = 0; j < 5; j++) {
             let currentCoords = linesData.linesCoords[number - 1][j];
             if (j === 0) {
-                winLine.graphics.s('rgba(244, 233, 205, 0.15)').setStrokeStyle(2).lt(currentCoords.x, currentCoords.y);
+                winLine.graphics.s('rgba(193, 148, 51, 0.8)').setStrokeStyle(2).lt(currentCoords.x, currentCoords.y);
             } else {
                 winLine.graphics.lt(currentCoords.x, currentCoords.y);
             }
@@ -537,7 +544,7 @@ let lines = (function () {
                         /* eslint-disable */
                         createjs.Tween.get(element)
                         .to({scaleX: 0.8, scaleY: 0.8}, 200)
-                        .to({scaleX: 1.1, scaleY: 1.1}, 700, createjs.Ease.bounceOut);
+                        .to({scaleX: 1.05, scaleY: 1.05}, 700, createjs.Ease.bounceOut);
                         /* eslint-enable */
                     }
                 });

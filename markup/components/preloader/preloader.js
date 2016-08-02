@@ -40,6 +40,7 @@ const mainManifest = [
     {id: 'linesSprite', src: 'static/img/content/lines/linesSprite.json', type: 'spritesheet'},
     {id: 'winLineRect', src: 'static/img/content/lines/winLineRect.png'},
     {id: 'winTotalRect', src: 'static/img/content/lines/winTotalRect.png'},
+    {id: 'winTotal', src: 'static/img/content/lines/winTotal.json', type: 'spritesheet'},
     // elements
     {id: 'elements', src: 'static/img/content/elements/elements.json', type: 'spritesheet'}
 ];

@@ -369,6 +369,7 @@ let spin = (function () {
         if (i === 4) {
             _requestReady()
             .then((response) => {
+                console.log(response);
                 if (response.ErrorCode === 0) {
                     inProgress = false;
                     fastSpinFlag = false;

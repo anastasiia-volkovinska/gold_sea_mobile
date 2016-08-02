@@ -157,13 +157,13 @@ let buttons = (function () {
 
     function startAutoButtons(count) {
         autoMode = true;
-        autoText = new createjs.Text(count, "bold 75px Arial", "#90fd5a").set({
+        autoText = new createjs.Text(count, "bold 75px Titania", "#ddd").set({
             x: 1180,
             y: 360,
             name: 'autoText',
             textAlign: 'center',
             textBaseline: 'middle',
-            shadow: new createjs.Shadow('#90fd5a', 0, 0, 8)
+            shadow: new createjs.Shadow('#ddd', 0, 0, 8)
         });
         buttonsContainer.addChild(autoText);
         setTimeout(function () {
@@ -186,29 +186,29 @@ let buttons = (function () {
         let count = data.fsCount;
         let level = data.fsLevel;
         let multi = data.fsMulti;
-        let fsLevel = new createjs.Text(level, "50px bold Arial", "#90fd5a").set({
+        let fsLevel = new createjs.Text(level, "50px bold Titania", "#ddd").set({
             name: 'fsLevel',
             x: autoSprite.x,
             y: autoSprite.y + 5,
             textAlign: 'center',
             textBaseline: 'middle',
-            shadow: new createjs.Shadow('#90fd5a', 0, 0, 8)
+            shadow: new createjs.Shadow('#ddd', 0, 0, 8)
         });
-        let fsMulti = new createjs.Text(multi, "50px bold Arial", "#90fd5a").set({
+        let fsMulti = new createjs.Text(multi, "50px bold Titania", "#ddd").set({
             name: 'fsMulti',
             x: betSprite.x,
             y: betSprite.y + 5,
             textAlign: 'center',
             textBaseline: 'middle',
-            shadow: new createjs.Shadow('#90fd5a', 0, 0, 8)
+            shadow: new createjs.Shadow('#ddd', 0, 0, 8)
         });
-        let fsCount = new createjs.Text(count, "85px bold Arial", "#90fd5a").set({
+        let fsCount = new createjs.Text(count, "85px bold Titania", "#ddd").set({
             name: 'fsCount',
             x: spinSprite.x,
             y: spinSprite.y,
             textAlign: 'center',
             textBaseline: 'middle',
-            shadow: new createjs.Shadow('#90fd5a', 0, 0, 8)
+            shadow: new createjs.Shadow('#ddd', 0, 0, 8)
         });
         buttonsContainer.addChild(fsLevel, fsMulti, fsCount);
     }

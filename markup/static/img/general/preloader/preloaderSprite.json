@@ -1,5 +1,5 @@
 {
-    "images": ["static/img/general/preloader/progress.png"],
+    "images": ["static/img/general/preloader/preloaderSprite.png"],
     "frames": {
         "width": 818,
         "height": 45,

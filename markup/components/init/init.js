@@ -70,7 +70,7 @@ let init = (function () {
 
     function initGame(sessionID) {
         /* eslint-disable */
-        const gameID = 6; // КОСТЫЛЬ! Должен получать от сервера инициализации.
+        const gameID = 1; // КОСТЫЛЬ! Должен получать от сервера инициализации.
 
         let playPromise = utils.request('_Play', `/${sessionID}/${gameID}`);
             playPromise.then((balanceData) => {
