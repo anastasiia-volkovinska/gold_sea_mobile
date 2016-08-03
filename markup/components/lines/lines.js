@@ -284,12 +284,13 @@ let lines = (function () {
             });
             /* eslint-disable */
             let totalWinText = new createjs.BitmapText(win+'', loader.getResult('winTotal')).set({
-                name: 'totalWinText',
+                name: 'totalWinText'
             });
-            totalWinText.x = (1280 - totalWinText.getBounds().width) / 2;
-            totalWinText.y = (720 - totalWinText.getBounds().height) / 2;
-            totalWinText.regX = totalWinText.getBounds().width / 2;
-            totalWinText.regY = totalWinText.getBounds().height / 2;
+            totalWinText.x = (1280 - totalWinText.getBounds().width) / 2 - 60;
+            totalWinText.y = (720 - totalWinText.getBounds().height) / 2 - 30;
+            // totalWinText.regX = totalWinText.getBounds().width / 2;
+            // totalWinText.regY = totalWinText.getBounds().height / 2;
+
             // let totalWinText = new createjs.Text(win, 'bold 75px Arial', '#f0e194').set({
             //     /* eslint-enable */
             //     x: 88,
@@ -377,6 +378,7 @@ let lines = (function () {
         flags.autoMode = spinEndObject.autoSpinFlag;
         flags.freeMode = spinEndObject.freeSpinFlag;
         flags.mode = spinEndObject.mode;
+        flags.fsCount = spinEndObject.fsCount;
         /* eslint-disable */
         let loader = preloader.getLoadResult();
         /* eslint-enable */
@@ -392,17 +394,23 @@ let lines = (function () {
             // Если мы в режиме автоплей или фриспин - через 1.5 секунды запустили следующую крутку
             if (flags.autoMode) {
                 startEventTimer('autoTimer', 'startAutoplay', 1500);
-            } else if (flags.freeMode && flags.mode === 'fsBonus') {
+            } else if (flags.freeMode && flags.mode === 'fsBonus' && flags.fsCount) {
                 startEventTimer('freeTimer', 'startFreeSpin', 1500);
+            } else if (flags.freeMode && flags.mode === 'fsBonus' && flags.fsCount === 0) {
+                console.error('I stoping Free Spins!');
+                events.trigger('finishFreeSpins');
             } else {
                 drawLineByLine();
             }
         // Если мы ничего не выиграли - то фриспины и автоспины начнутся раньше - через 200 мс.
         } else if (flags.autoMode) {
             startEventTimer('autoTimer', 'startAutoplay', 200);
-        } else if (flags.freeMode && flags.mode === 'fsBonus') {
+        } else if (flags.freeMode && flags.mode === 'fsBonus' && flags.fsCount) {
             console.warn('I AM DISPATCH startFreeSpin EVENT!');
             startEventTimer('freeTimer', 'startFreeSpin', 200);
+        } else if (flags.freeMode && flags.mode === 'fsBonus' && flags.fsCount === 0) {
+            console.error('I stoping Free Spins!');
+            events.trigger('finishFreeSpins');
         }
     }
 
@@ -455,15 +463,15 @@ let lines = (function () {
             scaleY: 1
         });
         /* eslint-disable */
-        let winLineText = new createjs.Text(win, 'bold 32px Arial', '#ddd').set({
+        let winLineText = new createjs.Text(win, 'bold 27px Arial', 'gold').set({
             /* eslint-enable */
-            x: 25,
-            y: 25,
+            x: 26,
+            y: 26,
             textAlign: 'center',
             textBaseline: 'middle',
             name: 'winLineText',
             /* eslint-disable */
-            shadow: new createjs.Shadow('#C19433', 0, 0, 8)
+            shadow: new createjs.Shadow('#C19433', 0, 0, 15)
             /* eslint-enable */
         });
 
@@ -576,8 +584,15 @@ let lines = (function () {
                             let element = column.getChildByName('gameElement' + j);
                             let animationName = element.currentAnimation;
                             let elementIndex = animationName.substr(animationName.indexOf('-') + 1);
-                            if (+elementIndex === 11 || +elementIndex === 12 || +elementIndex === 13) {
+                            if (+elementIndex === 11 || +elementIndex === 12 || +elementIndex === 13 || +elementIndex === 14) {
                                 element.gotoAndStop(`win-${elementIndex}`);
+                            }
+                            if (+elementIndex === 14) {
+                                element.gotoAndStop(`win-${elementIndex}`);
+                                createjs.Tween.get(element)
+                                .to({scaleX: 0.8, scaleY: 0.8}, 200)
+                                .to({scaleX: 1.1, scaleY: 1.1}, 700, createjs.Ease.bounceOut);
+                                winRectsContainer.addChild(drawTotalWin('+3').set({x: 110, y: 260, scaleX: 0.7, scaleY: 0.7}));
                             }
                         }
                     }

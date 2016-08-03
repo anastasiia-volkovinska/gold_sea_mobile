@@ -1,9 +1,11 @@
 {
     "images": ["static/img/content/lines/linesSprite.png"],
     "frames": {
-        "width": 46,
-        "height": 33,
-        "count": 4
+        "width": 18,
+        "height": 18,
+        "regX": -9,
+        "regY": -9,
+        "count": 1
     },
     "framerate": 12,
     "animations": {

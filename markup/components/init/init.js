@@ -25,7 +25,7 @@ let init = (function () {
                     case 'k':
                         element = 5;
                         break;
-                    case 'ik': // КОСТЫЛЬ! Попросить бек чтобы называли одинаково
+                    case 'iK': // КОСТЫЛЬ! Попросить бек чтобы называли одинаково
                         element = 6;
                         break;
                     case 'a':
@@ -70,7 +70,7 @@ let init = (function () {
 
     function initGame(sessionID) {
         /* eslint-disable */
-        const gameID = 1; // КОСТЫЛЬ! Должен получать от сервера инициализации.
+        const gameID = 8; // КОСТЫЛЬ! Должен получать от сервера инициализации.
 
         let playPromise = utils.request('_Play', `/${sessionID}/${gameID}`);
             playPromise.then((balanceData) => {
