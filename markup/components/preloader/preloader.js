@@ -29,6 +29,14 @@ const mainManifest = [
     {id: 'totalWinFS', src: 'static/img/content/freespin/totalWinFS.json', type: 'spritesheet'},
     {id: 'multiTitle', src: 'static/img/content/freespin/multiTitle.png'},
     {id: 'multiCoins', src: 'static/img/content/freespin/multiCoins.png'},
+    // bonuses
+    {id: 'bonusBG', src: 'static/img/content/bonuses/bonusBG.png'},
+    {id: 'bonusFG', src: 'static/img/content/bonuses/bonusFG.png'},
+    {id: 'bonusWin', src: 'static/img/content/bonuses/bonusWin.png'},
+    {id: 'bonusWinResult', src: 'static/img/content/bonuses/bonusWinResult.png'},
+    {id: 'bonusFail', src: 'static/img/content/bonuses/bonusFail.png'},
+    {id: 'illuminators', src: 'static/img/content/bonuses/illuminators.json', type: 'spritesheet'},
+    {id: 'octopus', src: 'static/img/content/bonuses/octopus.png'},
     // buttons
     {id: 'spinButton', src: 'static/img/content/buttons/spin.json', type: 'spritesheet'},
     {id: 'autoButton', src: 'static/img/content/buttons/auto.json', type: 'spritesheet'},

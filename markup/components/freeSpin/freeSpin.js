@@ -50,7 +50,7 @@ let freeSpins = (function () {
         let transitionText = new createjs.Bitmap(loader.getResult('freeSpinsText')).set({
             name: 'transitionText',
             x: (1280 - 790) / 2,
-            y: 90
+            y: 70
         });
         let transitionOsminog = new createjs.Bitmap(loader.getResult('osminog')).set({
             name: 'transitionOsmonig',
@@ -122,22 +122,22 @@ let freeSpins = (function () {
                 fsTotalWin = fsTotalWin + data.winCoins;
                 let fsTotalContainer = new createjs.Container().set({
                     name: 'fsTotalContainer',
-                    x: 650,
-                    y: 55
+                    x: 550,
+                    y: 20
                 });
-                let fsTotalWinTitle = new createjs.Text('Total Free Win:', '35px bold Arial', '#fff').set({
+                let fsTotalWinTitle = new createjs.Text('Total Free Win:', '24px bold Arial', '#fff').set({
                     name: 'fsTotalWinTitle',
                     textAlign: 'center',
                     textBaseline: 'middle',
-                    shadow: new createjs.Shadow('#fff', 0, 0, 10)
+                    shadow: new createjs.Shadow('#C19433', 0, 0, 10)
                 });
-                let fsTotalWinText = new createjs.Text(fsTotalWin, '50px bold Arial', '#fff').set({
+                let fsTotalWinText = new createjs.Text(fsTotalWin, '36px bold Arial', '#fff').set({
                     name: 'fsTotalWinText',
-                    x: 260,
+                    x: 110,
                     y: 0,
                     textAlign: 'center',
                     textBaseline: 'middle',
-                    shadow: new createjs.Shadow('#fff', 0, 0, 10)
+                    shadow: new createjs.Shadow('#C19433', 0, 0, 10)
                 });
                 fsTotalContainer.addChild(fsTotalWinTitle, fsTotalWinText);
                 stage.addChild(fsTotalContainer);
@@ -157,7 +157,7 @@ let freeSpins = (function () {
         let finishText = new createjs.Bitmap(loader.getResult('totalWinText')).set({
             name: 'finishText',
             x: (1280 - 815) / 2,
-            y: 90
+            y: 70
         });
         let finishOsminog = new createjs.Bitmap(loader.getResult('osminog')).set({
             name: 'finishOsminog',
@@ -179,8 +179,7 @@ let freeSpins = (function () {
         });
         finishWinText.x = (1280 - finishWinText.getBounds().width) / 2;
         finishWinText.y = (720 - finishWinText.getBounds().height) / 2;
-        // finishWinText.regX = finishWinText.getBounds().width / 2;
-        // finishWinText.regY = finishWinText.getBounds().height / 2;
+
         let finishButton = new createjs.Sprite(loader.getResult('continueButton'), 'out').set({
             name: 'finishButton',
             x: (1280 - 396) / 2,

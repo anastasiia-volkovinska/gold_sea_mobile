@@ -279,34 +279,13 @@ let lines = (function () {
             let totalWin = new createjs.Container().set({
                 /* eslint-enable */
                 name: 'totalWin'
-                // x: (960 - 176) / 2 + 3,
-                // y: (540 - 150) / 2
             });
             /* eslint-disable */
             let totalWinText = new createjs.BitmapText(win+'', loader.getResult('winTotal')).set({
                 name: 'totalWinText'
             });
-            totalWinText.x = (1280 - totalWinText.getBounds().width) / 2 - 60;
-            totalWinText.y = (720 - totalWinText.getBounds().height) / 2 - 30;
-            // totalWinText.regX = totalWinText.getBounds().width / 2;
-            // totalWinText.regY = totalWinText.getBounds().height / 2;
-
-            // let totalWinText = new createjs.Text(win, 'bold 75px Arial', '#f0e194').set({
-            //     /* eslint-enable */
-            //     x: 88,
-            //     y: 75,
-            //     name: 'totalWinText',
-            //     textAlign: 'center',
-            //     textBaseline: 'middle',
-            //     /* eslint-disable */
-            //     shadow: new createjs.Shadow('#C19433', 0, 0, 8)
-            //     /* eslint-enable */
-            // });
-            // /* eslint-disable */
-            // let totalWinRect = new createjs.Bitmap(loader.getResult('winTotalRect')).set({
-            //     /* eslint-enable */
-            //     name: 'totalWinRect'
-            // });
+            totalWinText.x = (960 - totalWinText.getBounds().width) / 2;
+            totalWinText.y = (540 - totalWinText.getBounds().height) / 2;
             totalWin.addChild(totalWinText);
             return totalWin;
         } else {
@@ -592,7 +571,7 @@ let lines = (function () {
                                 createjs.Tween.get(element)
                                 .to({scaleX: 0.8, scaleY: 0.8}, 200)
                                 .to({scaleX: 1.1, scaleY: 1.1}, 700, createjs.Ease.bounceOut);
-                                winRectsContainer.addChild(drawTotalWin('+3').set({x: 110, y: 260, scaleX: 0.7, scaleY: 0.7}));
+                                winRectsContainer.addChild(drawTotalWin('+3').set({x: 120, y: 260, scaleX: 0.7, scaleY: 0.7}));
                             }
                         }
                     }
@@ -667,6 +646,8 @@ let lines = (function () {
     return {
         drawLinesNumbers,
         drawWinLine,
-        clearAutoTimer
+        clearAutoTimer,
+        removeWinLines,
+        removeWinScreen
     };
 })();
