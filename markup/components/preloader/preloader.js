@@ -32,11 +32,12 @@ const mainManifest = [
     // bonuses
     {id: 'bonusBG', src: 'static/img/content/bonuses/bonusBG.png'},
     {id: 'bonusFG', src: 'static/img/content/bonuses/bonusFG.png'},
-    {id: 'bonusWin', src: 'static/img/content/bonuses/bonusWin.png'},
-    {id: 'bonusWinResult', src: 'static/img/content/bonuses/bonusWinResult.png'},
-    {id: 'bonusFail', src: 'static/img/content/bonuses/bonusFail.png'},
+    {id: 'bonusWin', src: 'static/img/content/bonuses/bonusWin.json', type: 'spritesheet'},
+    {id: 'bonusWinResult', src: 'static/img/content/bonuses/bonusWinResult.json', type: 'spritesheet'},
+    {id: 'bonusFail', src: 'static/img/content/bonuses/bonusFail.json', type: 'spritesheet'},
     {id: 'illuminators', src: 'static/img/content/bonuses/illuminators.json', type: 'spritesheet'},
     {id: 'octopus', src: 'static/img/content/bonuses/octopus.png'},
+    {id: 'light', src: 'static/img/content/bonuses/light.png'},
     // buttons
     {id: 'spinButton', src: 'static/img/content/buttons/spin.json', type: 'spritesheet'},
     {id: 'autoButton', src: 'static/img/content/buttons/auto.json', type: 'spritesheet'},
