@@ -74,6 +74,28 @@ let bonuses = (function () {
             name: 'illuminatorContainer'
         });
 
+        let bigFish = new createjs.Sprite(loader.getResult('bigFish'), 'move').set({
+            name: 'bigFish',
+            x: 50,
+            y: 350
+        });
+
+        let upperLight = new createjs.Bitmap(loader.getResult('upperLight'));
+        upperLight.alpha = 0.5;
+        let upperLight2 = upperLight.clone();
+        let upperLight3 = upperLight.clone();
+        upperLight2.x = -50; upperLight2.y = -60;
+        upperLight3.x = -20; upperLight3.y = -30;
+        createjs.Tween.get(upperLight, {loop: true})
+          .to({alpha: 0.2}, 1900)
+          .to({alpha: 0.5}, 1200);
+        createjs.Tween.get(upperLight2, {loop: true})
+          .to({alpha: 0.2}, 2900)
+          .to({alpha: 0.5}, 1700);
+        createjs.Tween.get(upperLight3, {loop: true})
+          .to({alpha: 0.2}, 1100)
+          .to({alpha: 0.5}, 1400);
+
         let ss = loader.getResult('illuminators');
         let illuminator_1 = new createjs.Sprite(ss, 0).set({
             x: 358,
@@ -107,8 +129,12 @@ let bonuses = (function () {
         });
 
         doors.push(illuminator_1, illuminator_2, illuminator_3, illuminator_4, illuminator_5);
-        bonusContainer.addChild(bonusBG, illuminatorContainer, bonusFG);
+        bonusContainer.addChild(bonusBG, illuminatorContainer, bigFish, upperLight, upperLight2, upperLight3, bonusFG);
         stage.addChildAt(bonusContainer, 0);
+
+        let fishMove = new TimelineMax({repeat: -1, yoyo: true});
+        fishMove.to(bigFish, 5, {y: 250})
+            .to(bigFish, 5, {y: 350});
 
         doors.forEach((door, index) => {
             door.stop();
@@ -128,7 +154,7 @@ let bonuses = (function () {
 
         setTimeout(function () {
            DoorLight(blicks);
-        }, 500);
+       }, 300);
 
         addClickHandlers(doors, bonusContainer, bonusFG);
         console.warn("we are entering addClickHandlers");
@@ -143,6 +169,7 @@ let bonuses = (function () {
            DoorLight(blicks);
         }, Math.random()*3000+500);
     }
+
 
     function addClickHandlers(arr, container, el) {
         let loader = preloader.getLoadResult();

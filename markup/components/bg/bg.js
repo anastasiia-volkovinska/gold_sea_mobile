@@ -150,16 +150,17 @@ let bg = (function () {
 
         function showLabelLight(){
 
-          let labelLight = new createjs.Sprite(loader.getResult('labelLight'), "go");
-          labelLight.x = 460;
-          labelLight.y = 30;
+          let labelLight = new createjs.Sprite(loader.getResult('logoLight'), "go");
+          labelLight.x = 447;
+          labelLight.y = 10;
+          labelLight.scaleX = labelLight.scaleX = 0.8;
           gameStaticStage.addChild(labelLight);
           labelLight.on("animationend", function(){
             gameStaticStage.removeChild(labelLight);
           });
           setTimeout(showLabelLight.bind(null), 10000*Math.random()+10000);
         }
-        setTimeout(showLabelLight.bind(null), 20000);
+        setTimeout(showLabelLight.bind(null), 7000);
 
         function showEyeLight(){
             let eyeLight = new createjs.Bitmap(loader.getResult('eyeLight'));

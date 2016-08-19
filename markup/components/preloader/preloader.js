@@ -23,7 +23,7 @@ const mainManifest = [
     {id: 'bubbleBG', src: 'static/img/content/bg/bubbleBG.png'},
     {id: 'fishBG', src: 'static/img/content/bg/fishBG.json', type: 'spritesheet'},
     {id: 'sharkBG', src: 'static/img/content/bg/sharkBG.json', type: 'spritesheet'},
-    {id: 'labelLight', src: 'static/img/content/bg/labelLight.json', type: 'spritesheet'},
+    {id: 'logoLight', src: 'static/img/content/bg/logoLight.json', type: 'spritesheet'},
     {id: 'eyeLight', src: 'static/img/content/bg/eyeLight.png'},
     // freespin
     {id: 'vodolaz', src: 'static/img/content/freespin/vodolaz.png'},
@@ -44,6 +44,8 @@ const mainManifest = [
     {id: 'illuminators', src: 'static/img/content/bonuses/illuminators.json', type: 'spritesheet'},
     {id: 'octopus', src: 'static/img/content/bonuses/octopus.png'},
     {id: 'light', src: 'static/img/content/bonuses/light.png'},
+    {id: 'upperLight', src: 'static/img/content/bonuses/upperLight.png'},
+    {id: 'bigFish', src: 'static/img/content/bonuses/bigFish.json', type: 'spritesheet'},
     // buttons
     {id: 'spinButton', src: 'static/img/content/buttons/spin.json', type: 'spritesheet'},
     {id: 'autoButton', src: 'static/img/content/buttons/auto.json', type: 'spritesheet'},
