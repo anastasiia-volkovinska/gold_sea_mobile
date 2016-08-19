@@ -1,13 +1,13 @@
 {
     "images": ["static/img/content/bonuses/bonusFail.png"],
     "frames": {
-        "width": 131,
-        "height": 78,
-        "count": 16
+        "width": 125,
+        "height": 100,
+        "count": 34
     },
-    "framerate": 12,
+    "framerate": 24,
     "animations": {
-        "show": [0, 15, "move"],
-        "move": [8, 15]
+        "show": [0, 33, "move"],
+        "move": [11, 33]
     }
 }

@@ -19,6 +19,12 @@ const mainManifest = [
     {id: 'gameShadow', src: 'static/img/content/bg/gameShadow.png'},
     {id: 'transitionBG', src: 'static/img/content/bg/transitionBG.png'},
     {id: 'multiBG', src: 'static/img/content/bg/multiBG.png'},
+    {id: 'homeBG', src: 'static/img/content/bg/homeBG.png'},
+    {id: 'bubbleBG', src: 'static/img/content/bg/bubbleBG.png'},
+    {id: 'fishBG', src: 'static/img/content/bg/fishBG.json', type: 'spritesheet'},
+    {id: 'sharkBG', src: 'static/img/content/bg/sharkBG.json', type: 'spritesheet'},
+    {id: 'labelLight', src: 'static/img/content/bg/labelLight.json', type: 'spritesheet'},
+    {id: 'eyeLight', src: 'static/img/content/bg/eyeLight.png'},
     // freespin
     {id: 'vodolaz', src: 'static/img/content/freespin/vodolaz.png'},
     {id: 'sunduk', src: 'static/img/content/freespin/sunduk.png'},

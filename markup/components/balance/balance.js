@@ -13,8 +13,8 @@ let balance = (function () {
     let balanceData = {};
 
     let parameters = {
-        font: 'bold 20px Titania',
-        color: '#ddd',
+        font: 'bold 18px Helvetica',
+        color: '#fff',
         coinsValue: {
             x: 50,
             y: 50,
@@ -22,16 +22,17 @@ let balance = (function () {
             name: 'coinsValue'
         },
         coinsSum: {
-            x: 285,
-            y: 613,
+            x: 550,
+            y: 655,
             textAlign: 'center',
-            font: 'bold 28px Titania',
+            font: 'bold 24px Helvetica',
             name: 'coinsSum',
-            shadow: new createjs.Shadow('#858482', 0, 0, 15)
+            color: '#1de4c3',
+            shadow: new createjs.Shadow('#1de4c3', 0, 0, 15)
         },
         coinsCash: {
-            x: 430,
-            y: 690,
+            x: 460,
+            y: 693,
             textAlign: 'center',
             name: 'coinsCash'
         },
@@ -42,22 +43,23 @@ let balance = (function () {
             name: 'betValue'
         },
         betSum: {
-            x: 935,
-            y: 613,
+            x: 700,
+            y: 655,
             textAlign: 'center',
-            font: 'bold 28px Titania',
+            font: 'bold 24px Helvetica',
             name: 'betSum',
-            shadow: new createjs.Shadow('#858482', 0, 0, 15)
+            color: '#1de4c3',
+            shadow: new createjs.Shadow('#1de4c3', 0, 0, 15)
         },
         betCash: {
-            x: 590,
-            y: 690,
+            x: 610,
+            y: 693,
             textAlign: 'center',
             name: 'betCash'
         },
         winCash: {
             x: 760,
-            y: 690,
+            y: 693,
             textAlign: 'center',
             name: 'winCash'
         },
@@ -100,17 +102,35 @@ let balance = (function () {
     function writeBalance() {
         /* eslint-disable */
         balanceText.coinsSum = new createjs.Text(balanceData.coinsSum, parameters.font, parameters.color).set(parameters.coinsSum);
-        balanceText.coinsCash = new createjs.Text(balanceData.coinsCash, parameters.font, parameters.color).set(parameters.coinsCash);
+        balanceText.coinsCash = new createjs.Text('€ '+balanceData.coinsCash, parameters.font, parameters.color).set(parameters.coinsCash);
         balanceText.betSum = new createjs.Text(balanceData.betSum, parameters.font, parameters.color).set(parameters.betSum);
-        balanceText.betCash = new createjs.Text(balanceData.betCash, parameters.font, parameters.color).set(parameters.betCash);
-        balanceText.winCash = new createjs.Text(balanceData.winCash, parameters.font, parameters.color).set(parameters.winCash);
+        balanceText.betCash = new createjs.Text('€ '+balanceData.betCash, parameters.font, parameters.color).set(parameters.betCash);
+        balanceText.winCash = new createjs.Text('€ '+balanceData.winCash, parameters.font, parameters.color).set(parameters.winCash);
+
+        balanceText.coinsCashText = new createjs.Text('Cash:', parameters.font, '#888888').set({x: 375, y: 693});
+        balanceText.betCashText = new createjs.Text('Bet:', parameters.font, '#888888').set({x: 535, y: 693});
+        balanceText.winCashText = new createjs.Text('Win:', parameters.font, '#888888').set({x: 680, y: 693});
+        balanceText.coinsSumText = new createjs.Text('Coins:', 'bold 24px Helvetica', parameters.color).set({
+            x: 435,
+            y: 655
+        });
+        balanceText.betSumText = new createjs.Text('Bet:', 'bold 24px Helvetica', parameters.color).set({
+            x: 625,
+            y: 655
+        });
 
         balanceContainer.addChild(
             balanceText.coinsSum,
             balanceText.coinsCash,
             balanceText.betSum,
             balanceText.betCash,
-            balanceText.winCash);
+            balanceText.winCash,
+            balanceText.coinsCashText,
+            balanceText.betCashText,
+            balanceText.winCashText,
+            balanceText.coinsSumText,
+            balanceText.betSumText
+        );
 
         balanceStage.addChild(balanceContainer);
         balanceStage.update();
@@ -120,10 +140,10 @@ let balance = (function () {
     function updateBalance() {
         /* eslint-disable */
         if (balanceText.coinsSum.text !== balanceData.coinsSum) balanceText.coinsSum.text = balanceData.coinsSum;
-        if (balanceText.coinsCash.text !== balanceData.coinsCash) balanceText.coinsCash.text = balanceData.coinsCash;
+        if (balanceText.coinsCash.text.toString().slice(1) != balanceData.coinsCash) balanceText.coinsCash.text = '€ ' + balanceData.coinsCash;
         if (balanceText.betSum.text !== balanceData.betSum) balanceText.betSum.text = balanceData.betSum;
-        if (balanceText.betCash.text !== balanceData.betCash) balanceText.betCash.text = balanceData.betCash;
-        if (balanceText.winCash.text !== balanceData.winCash) balanceText.winCash.text = balanceData.winCash;
+        if (balanceText.betCash.text.toString().slice(1) != balanceData.betCash) balanceText.betCash.text = '€ ' + balanceData.betCash;
+        if (balanceText.winCash.text.toString().slice(1) != balanceData.winCash) balanceText.winCash.text = '€ ' + balanceData.winCash;
         /* eslint-enable */
         balanceStage.update();
     }

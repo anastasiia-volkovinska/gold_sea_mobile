@@ -217,7 +217,7 @@ let lines = (function () {
                 backStage.addChildAt(winLinesContainer, 0);
                 frontStage.addChildAt(winNumbersContainer, winRectsContainer, 0);
 
-                drawLinesNumbers();
+                // drawLinesNumbers();
 
             });
         /* eslint-enable */
@@ -468,15 +468,15 @@ let lines = (function () {
     }
 
     function drawLinesShape(number) {
-        let winDisc = linesEls.linesDiscs[number - 1];
-        winDisc.gotoAndStop('off');
+        // let winDisc = linesEls.linesDiscs[number - 1];
+        // winDisc.gotoAndStop('off');
         /* eslint-disable */
         let winLine = new createjs.Shape();
         /* eslint-enable */
         for (let j = 0; j < 5; j++) {
             let currentCoords = linesData.linesCoords[number - 1][j];
             if (j === 0) {
-                winLine.graphics.s('rgba(193, 148, 51, 0.8)').setStrokeStyle(2).lt(currentCoords.x, currentCoords.y);
+                winLine.graphics.s('#00fefe').setStrokeStyle(2).lt(currentCoords.x, currentCoords.y);
             } else {
                 winLine.graphics.lt(currentCoords.x, currentCoords.y);
             }
@@ -537,7 +537,7 @@ let lines = (function () {
                 });
             // Если выпали скаттеры
             } else if (number === -1) {
-                console.warn('I am here! Lines number = -1');
+                console.warn('I am here! Lines number = -1', data.number);
                 if (win > 0) {
                     for (let i = 0; i < 5; i++) {
                         let column = gameContainer.getChildByName('gameColumn' + i);

@@ -202,7 +202,7 @@ let spin = (function () {
 
     function drawScreen(nextScreenData) {
         if (!gameContainer) {
-            _initGameContainer(100, 52);
+            _initGameContainer(100, 68);
         } else {
             gameContainer.removeAllChildren();
         }
@@ -234,7 +234,7 @@ let spin = (function () {
                 columns[i] = _createColumn(nextScreenData[i]).set({
                     x: elementWidth * i
                 });
-                console.log(columns[i]);
+                // console.log(columns[i]);
                 gameContainer.addChild(columns[i]);
             }
         }
@@ -320,7 +320,7 @@ let spin = (function () {
                     }
                     bonusLevelName = data.BonusResults[0];
                     if (bonusLevelName === 'StagesSlotBonus') {
-                        console.log('You are starting Bonus Level!');
+                        console.warn('You are starting Bonus Level!', data.BonusResults[0]);
                         /* eslint-disable */
                         bonusFlag = true;
                         /* eslint-enable */
@@ -483,11 +483,15 @@ let spin = (function () {
     function stopFreeSpins() {
         freeSpinFlag = false;
     }
+    function stopBonusLevel() {
+        bonusFlag = false;
+    }
 
     /* eslint-disable */
     events.on('dataDownloaded', initWheels);
     events.on('initScreen', drawScreen);
     events.on('stopFreeSpins', stopFreeSpins);
+    events.on('stopBonusLevel', stopBonusLevel);
     events.on('spinWin', logWinLines);
     /* eslint-enable */
 
@@ -500,6 +504,7 @@ let spin = (function () {
         getSpinState,
         getGamePosition,
         _getScreenData,
-        drawScreen
+        drawScreen,
+        stopBonusLevel
     };
 })();

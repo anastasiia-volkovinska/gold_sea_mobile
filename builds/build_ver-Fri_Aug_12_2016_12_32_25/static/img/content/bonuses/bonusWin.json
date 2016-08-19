@@ -1,0 +1,12 @@
+{
+    "images": ["static/img/content/bonuses/bonusWin.png"],
+    "frames": {
+        "width": 335,
+        "height": 431,
+        "count": 6
+    },
+    "framerate": 12,
+    "animations": {
+        "go": [0, 5]
+    }
+}

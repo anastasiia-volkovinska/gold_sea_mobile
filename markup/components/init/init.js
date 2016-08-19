@@ -74,6 +74,7 @@ let init = (function () {
 
         let playPromise = utils.request('_Play', `/${sessionID}/${gameID}`);
             playPromise.then((balanceData) => {
+                console.warn(balanceData);
                 initData.balance = balanceData;
             })
             .catch(error => console.dir(error));
