@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 let freeSpins = (function () {
 
     let currentFreeSpins;
@@ -5,6 +7,11 @@ let freeSpins = (function () {
     let fsStartData;
     let fsTotalWin;
     let stage;
+    let fsWin;
+
+    function writeData(data){
+        fsWin = data.TotalWinCoins;
+    }
 
     function drawFreeSpinsBG() {
         /* eslint-disable no-undef */
@@ -16,6 +23,55 @@ let freeSpins = (function () {
         stage.removeChild(stage.getChildByName('mainBG'));
         stage.addChildAt(fsBG, 0);
         stage.update();
+
+        // moving elements to center
+        let moveX = 60;
+        let gameStage = canvas.getStages().gameStage;
+        let buttonsContainer = gameStage.getChildByName('buttonsContainer');
+            buttonsContainer.x = 1280 + 500;
+
+        let winRectsContainer = canvas.getStages().gameStage;
+            winRectsContainer.x = winRectsContainer.x + moveX;
+
+        let bgStage = canvas.getStages().bgStage;
+        let gameContainer = bgStage.getChildByName('gameContainer');
+            gameContainer.x = gameContainer.x + moveX;
+            gameContainer.mask.x = gameContainer.mask.x + moveX;
+
+        let bgStaticStage = canvas.getStages().bgStaticStage;
+        let gameBG = bgStaticStage.getChildByName('gameBG');
+            gameBG.x = gameBG.x + moveX;
+
+        let gameStaticStage = canvas.getStages().gameStaticStage;
+        let gameMachine = gameStaticStage.getChildByName('gameMachine');
+            gameMachine.x = gameMachine.x + moveX;
+        let balanceContainer = gameStaticStage.getChildByName('balanceContainer');
+            balanceContainer.x = balanceContainer.x + moveX;
+        balanceContainer.removeChild(balanceContainer.getChildByName('coinsSum'));
+        balanceContainer.removeChild(balanceContainer.getChildByName('betSum'));
+        balanceContainer.removeChild(balanceContainer.getChildByName('coinsSumText'));
+        balanceContainer.removeChild(balanceContainer.getChildByName('betSumText'));
+
+        createjs.Ticker.on('tick', function () {
+            if(gameStaticStage.getChildByName('labelLight')) {
+                let labelLight = gameStaticStage.getChildByName('labelLight');
+                labelLight.x = 507;
+            } else {
+                return;
+            }
+        });
+
+        createjs.Ticker.on('tick', function () {
+            if(gameStaticStage.getChildByName('eyeLight')) {
+                let eyeLight = gameStaticStage.getChildByName('eyeLight');
+                eyeLight.x = 502;
+            } else {
+                return;
+            }
+        });
+
+        showVodolaz();
+        showChests();
     }
 
     function initFreeSpins(data) {
@@ -93,6 +149,7 @@ let freeSpins = (function () {
     function startFreeSpin() {
         console.warn('I am free spin and I am called!');
         spin.spinStart(false, true);
+
         // buttons.update
     }
 
@@ -114,6 +171,7 @@ let freeSpins = (function () {
     }
 
     function countTotalWin(data) {
+        let stage = canvas.getStages().bonusStage;
         if (data.mode === 'fsBonus') {
             if (stage.getChildByName('fsTotalContainer')) {
                 fsTotalWin = fsTotalWin + data.winCoins;
@@ -123,22 +181,40 @@ let freeSpins = (function () {
                 let fsTotalContainer = new createjs.Container().set({
                     name: 'fsTotalContainer',
                     x: 550,
-                    y: 20
+                    y: 670
                 });
-                let fsTotalWinTitle = new createjs.Text('Total Free Win:', '24px bold Arial', '#fff').set({
+                let fsTotalWinTitle = new createjs.Text('Total Free Win:', '24px bold Helvetica', '#fff').set({
                     name: 'fsTotalWinTitle',
                     textAlign: 'center',
                     textBaseline: 'middle',
-                    shadow: new createjs.Shadow('#C19433', 0, 0, 10)
+                    shadow: new createjs.Shadow('#fff', 0, 0, 10)
                 });
-                let fsTotalWinText = new createjs.Text(fsTotalWin, '36px bold Arial', '#fff').set({
+                let fsTotalWinText = new createjs.Text(fsTotalWin, '32px bold Helvetica', '#1de4c3').set({
                     name: 'fsTotalWinText',
                     x: 110,
                     y: 0,
                     textAlign: 'center',
                     textBaseline: 'middle',
-                    shadow: new createjs.Shadow('#C19433', 0, 0, 10)
+                    shadow: new createjs.Shadow('#1de4c3', 0, 0, 10)
                 });
+
+                let fsWinTitle = new createjs.Text('Win:', '24px bold Helvetica', '#fff').set({
+                    x: 190,
+                    y: 0,
+                    name: 'fsWinTitle',
+                    textAlign: 'center',
+                    textBaseline: 'middle',
+                    shadow: new createjs.Shadow('#fff', 0, 0, 10)
+                });
+                let fsWinText = new createjs.Text(fsWin, '32px bold Helvetica', '#1de4c3').set({
+                    name: 'fsWinText',
+                    x: 240,
+                    y: 0,
+                    textAlign: 'center',
+                    textBaseline: 'middle',
+                    shadow: new createjs.Shadow('#1de4c3', 0, 0, 10)
+                });
+                console.log('fsWin', fsWin); //not showing!
                 fsTotalContainer.addChild(fsTotalWinTitle, fsTotalWinText);
                 stage.addChild(fsTotalContainer);
             }
@@ -203,6 +279,54 @@ let freeSpins = (function () {
         });
         let stage = canvas.getStages().bonusStage;
         stage.addChild(finishContainer);
+
+        // moving elements backwards
+        let moveX = 60;
+        let gameStage = canvas.getStages().gameStage;
+        let buttonsContainer = gameStage.getChildByName('buttonsContainer');
+            buttonsContainer.x = 0;
+
+        let winRectsContainer = canvas.getStages().gameStage;
+            winRectsContainer.x = winRectsContainer.x - moveX;
+
+        let bgStage = canvas.getStages().bgStage;
+        let gameContainer = bgStage.getChildByName('gameContainer');
+            gameContainer.x = gameContainer.x - moveX;
+            gameContainer.mask.x = gameContainer.mask.x - moveX;
+
+        let bgStaticStage = canvas.getStages().bgStaticStage;
+        let gameBG = bgStaticStage.getChildByName('gameBG');
+            gameBG.x = gameBG.x - moveX;
+
+        let gameStaticStage = canvas.getStages().gameStaticStage;
+        let gameMachine = gameStaticStage.getChildByName('gameMachine');
+            gameMachine.x = gameMachine.x - moveX;
+        let balanceContainer = gameStaticStage.getChildByName('balanceContainer');
+            balanceContainer.x = balanceContainer.x - moveX;
+
+        createjs.Ticker.on('tick', function () {
+            if(gameStaticStage.getChildByName('labelLight')) {
+                let labelLight = gameStaticStage.getChildByName('labelLight');
+                labelLight.x = 447;
+            } else {
+                return;
+            }
+        });
+
+        createjs.Ticker.on('tick', function () {
+            if(gameStaticStage.getChildByName('eyeLight')) {
+                let eyeLight = gameStaticStage.getChildByName('eyeLight');
+                eyeLight.x = 442;
+            } else {
+                return;
+            }
+        });
+
+        balanceContainer.addChild(balanceContainer.getChildByName('coinsSum'));
+        balanceContainer.addChild(balanceContainer.getChildByName('betSum'));
+        balanceContainer.addChild(balanceContainer.getChildByName('coinsSumText'));
+        balanceContainer.addChild(balanceContainer.getChildByName('betSumText'));
+
     }
 
     function addMultiBonus(data) {
@@ -263,6 +387,131 @@ let freeSpins = (function () {
         multiStage.addChild(multiContainer);
     }
 
+    let fon, verevka, diver, onlyVodolaz, button, buttonText, numbers, ramka, temnota, vodolazContainer, posVodolaz = 1;
+    function showVodolaz(){
+        let loader = preloader.getLoadResult();
+        let stage = canvas.getStages().bonusStage;
+
+    	fon = new createjs.Bitmap(loader.getResult('bgDiver1')).set({x: 15, y: 25, scaleX: 0.6, scaleY: 0.6});
+    	verevka = new createjs.Bitmap(loader.getResult('verevkaDiver')).set({x: 8, y: -780});
+    	diver = new createjs.Bitmap(loader.getResult('diver')).set({x: 35, y: 10, scaleX: 0.6, scaleY: 0.6});
+    	createjs.Tween.get(diver, {loop: true})
+    		.to({y: diver.y + 5}, 5000, createjs.Ease.bounceInOut)
+    		.to({y: diver.y}, 5000, createjs.Ease.bounceInOut);
+    	onlyVodolaz = new createjs.Container();
+    	onlyVodolaz.addChild(verevka, diver);
+    	button = new createjs.Bitmap(loader.getResult('buttonDiver')).set({x: 5, y: 40, scaleX: 0.6, scaleY: 0.6});
+
+    	buttonText = new createjs.Text("1", "bold 13px Arial", "#FFF");
+    	buttonText.textAlign = "center";
+    	buttonText.set({x: 15, y: 43});
+    	numbers = new createjs.Bitmap(loader.getResult('numbersDiver')).set({x: 5, y: 40, scaleX: 0.6, scaleY: 0.6});
+    	ramka = new createjs.Bitmap(loader.getResult('ramkaDiver')).set({scaleX: 0.6, scaleY: 0.6});
+    	temnota = new createjs.Bitmap(loader.getResult('temnotaDiver')).set({ x: 17, y: 75, alpha: 0.6, scaleX: 0.6, scaleY: 0.6});
+    	let puziry = new createjs.Bitmap(loader.getResult('puziryDiver'));
+    	vodolazContainer = new createjs.Container();
+    	let mask = new createjs.Shape();
+    	mask.graphics.s("#FFF").arc(93, 93, 93, Math.PI, 0).lt(184, 761).arc(93, 761, 93, Math.PI*2, Math.PI).cp();
+    	vodolazContainer.set({x: 7, y: 100});
+    	mask.set({x: 7, y: 100, scaleX: 0.6, scaleY: 0.6});
+    	vodolazContainer.mask = mask;
+    	vodolazContainer.addChild(fon, verevka, onlyVodolaz, temnota, ramka, numbers, button, buttonText);
+    	stage.addChildAt(vodolazContainer, stage.getChildByName('transitionBG'));
+    }
+    function vodolazVniz(){
+    	let newButton = button.clone();
+    	let newText = buttonText.clone();
+    	newButton.y += posVodolaz*30;
+    	newText.y += posVodolaz*30;
+    	posVodolaz++;
+    	newText.text = posVodolaz;
+    	temnota.y += 30;
+    	// verevka.y += 49;
+    	// onlyVodolaz.y += 49;
+    	createjs.Tween.get(verevka)
+    		.to({y: verevka.y + 30}, 1000, createjs.Ease.cubicIn);
+    	createjs.Tween.get(onlyVodolaz)
+    		.to({y: onlyVodolaz.y + 30}, 1000, createjs.Ease.cubicIn);
+    	vodolazContainer.addChild(newButton, newText);
+    }
+
+    let chest, glassChest, numberofChests = 2, chestContainer, numberChest, numberChestText;
+    function showChests(){
+        let loader = preloader.getLoadResult();
+        let stage = canvas.getStages().bonusStage;
+
+    	let bgChest = new createjs.Bitmap(loader.getResult('bgChest')).set({x: 20, y: 28, scaleX: 0.6, scaleY: 0.6});
+    	glassChest = new createjs.Bitmap(loader.getResult('glassChest')).set({x: 20, y: 28, scaleX: 0.6, scaleY: 0.6});
+    	chest = new createjs.Bitmap(loader.getResult('chest')).set({x: 20, y: 350, scaleX: 0.55, scaleY: 0.55});
+    	let numbersChest = new createjs.Bitmap(loader.getResult('numbersChest')).set({x: -6, y: 50, scaleX: 0.6, scaleY: 0.6});
+
+    	numberChest = new createjs.Bitmap(loader.getResult('numberChest')).set({x: -6, y: 367, scaleX: 0.6, scaleY: 0.6});
+    	numberChestText = new createjs.Text("x2", "bold 21px Arial", "#fff");
+    	numberChestText.textAlign = "center";
+    	numberChestText.set({x: numberChest.x + 18, y: numberChest.y + 7});
+    	let ramkaChest = new createjs.Bitmap(loader.getResult('ramkaChest')).set({scaleX: 0.6, scaleY: 0.6});
+    	chestContainer = new createjs.Container();
+    	chestContainer.addChild(bgChest, chest, glassChest, ramkaChest, numbersChest, numberChest, numberChestText);
+    	chestContainer.set({x: 1160, y: 160});
+    	stage.addChildAt(chestContainer, stage.getChildByName('transitionBG'));
+    }
+
+    function addNewChest(){
+        let loader = preloader.getLoadResult();
+        let newChest;
+    	if(numberofChests !== 6){
+    		newChest = chest.clone();
+    	} else {
+    		newChest = new createjs.Bitmap(loader.getResult('goldChest')).set({x: chest.x, scaleX: 0.6, scaleY: 0.6});
+    	}
+
+    	newChest.y = 0;
+    	createjs.Tween.get(newChest)
+    		.to({y:chest.y - numberofChests*57 + 57}, 500, createjs.Ease.sineIn)
+    		.call(bubblesChest);
+    	chestContainer.addChildAt(newChest, chestContainer.getChildIndex(glassChest));
+    	let newNumberChest = numberChest.clone();
+    	newNumberChest.y = numberChest.y - numberofChests*53 + 53;
+    	let newNumberChestText = numberChestText.clone();
+    	newNumberChestText.text = "x"+(numberofChests + 1);
+    	newNumberChestText.y = numberChestText.y - numberofChests*53 + 53;
+    	chestContainer.addChild(newNumberChest, newNumberChestText);
+    	numberofChests++;
+    }
+
+    function bubblesChest(){
+        let loader = preloader.getLoadResult();
+        let chestBubbles = new createjs.Sprite(loader.getResult('puziryChest'), "open");
+    	let newBubbles = chestBubbles.clone();
+    	newBubbles.set({x: -70, y: chest.y - numberofChests*90 - 50});
+    	let mask = new createjs.Shape();
+    	mask.graphics.s("#FFF").drawRect(10, 50, 165, 690);
+    	newBubbles.mask = mask;
+    	newBubbles.on("animationend", function(){
+    		chestContainer.removeChild(this);
+    	});
+    	chestContainer.addChildAt(newBubbles, chestContainer.getChildIndex(glassChest));
+    }
+
+    // trigger in spin.js
+    function checkVodolaz(fsLevel){
+        // console.log('fsLevel:', fsLevel);
+        // console.log('posVodolaz', posVodolaz);
+        if (fsLevel > posVodolaz){
+            vodolazVniz();
+        }
+    }
+
+    function checkMulti(fsMulti){
+        // console.log('fsMulti:', fsMulti);
+        // console.log('numberofChests', numberofChests);
+        if (fsMulti > numberofChests){
+            addNewChest();
+        }
+    }
+
+
+
     events.on('initFreeSpins', transitionFreeSpins);
     events.on('drawFreeSpins', initFreeSpins);
     // events.on('initFreeSpins', initFreeSpins);
@@ -271,6 +520,10 @@ let freeSpins = (function () {
     events.on('startFreeSpin', startFreeSpin);
     events.on('spinEnd', countTotalWin);
     events.on('multiplierBonus', addMultiBonus);
+    events.on('checkVodolaz', checkVodolaz);
+    events.on('checkMulti', checkMulti);
+    events.on('spinStart', writeData);
+
     return {
         initFreeSpins,
         stopFreeSpins,

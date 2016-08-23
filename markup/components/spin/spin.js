@@ -335,6 +335,10 @@ let spin = (function () {
                     indexes = data.Indexes;
                     if (freeSpin) {
                         nextScreen = _getScreenData(null, freeSpins.getWheels());
+                        fsLevel = data.Multiplier.MultiplierStep;
+                        fsMulti = data.Multiplier.MultiplierValue;
+                        events.trigger('checkMulti', fsMulti);
+                        events.trigger('checkVodolaz', fsLevel);
                     } else {
                         nextScreen = _getScreenData();
                     }

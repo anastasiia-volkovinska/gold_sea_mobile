@@ -5,8 +5,12 @@ html, body {
 }
 
 @font-face {
-  font-family: "Helvetica";
-  src: url("../fonts/Helvetica-Light.otf"); }
+    font-family: "Helvetica";
+    src: url("../fonts/Helvetica-Light.otf"); }
+
+@font-face {
+    font-family: "Trajan";
+    src: url("../fonts/TrajanPro3-Bold.otf"); }
 
 .page__wrapper {
     min-height: 100%;

@@ -278,15 +278,29 @@ let lines = (function () {
             let loader = preloader.getLoadResult();
             let totalWin = new createjs.Container().set({
                 /* eslint-enable */
-                name: 'totalWin'
+                name: 'totalWin',
+                x: (960 - 222) / 2 + 3,
+                y: (540 - 140) / 2
             });
             /* eslint-disable */
-            let totalWinText = new createjs.BitmapText(win+'', loader.getResult('winTotal')).set({
-                name: 'totalWinText'
+            let totalWinText = new createjs.Text(win, 'bold 75px Trajan', '#f0e194').set({
+                x: 111,
+                y: 70,
+                name: 'totalWinText',
+                textAlign: 'center',
+                textBaseline: 'middle',
+                /* eslint-disable */
+                shadow: new createjs.Shadow('#C19433', 0, 0, 8)
             });
-            totalWinText.x = (960 - totalWinText.getBounds().width) / 2;
-            totalWinText.y = (540 - totalWinText.getBounds().height) / 2;
-            totalWin.addChild(totalWinText);
+            // totalWinText.x = (totalWin.width - totalWinText.getBounds().width) / 2;
+            // totalWinText.y = (totalWin.height - totalWinText.getBounds().height) / 2;
+
+            let totalWinRect = new createjs.Bitmap(loader.getResult('winTotalRect')).set({
+                /* eslint-enable */
+                name: 'totalWinRect'
+            });
+
+            totalWin.addChild(totalWinRect, totalWinText);
             return totalWin;
         } else {
             return;
@@ -347,9 +361,9 @@ let lines = (function () {
         winRectsContainer.removeAllChildren();
         winLinesContainer.removeAllChildren();
         removeWinElements();
-        linesEls.linesDiscs.forEach((disc) => {
-            disc.gotoAndStop('on');
-        });
+        // linesEls.linesDiscs.forEach((disc) => {
+        //     disc.gotoAndStop('on');
+        // });
     }
 
     function drawWinLines(spinEndObject) {
@@ -463,7 +477,7 @@ let lines = (function () {
         }
 
         winText.addChild(winLineRect, winLineText);
-        linesEls.winRects.push(winText);
+        // linesEls.winRects.push(winText);
         winRectsContainer.addChild(winText);
     }
 
@@ -482,7 +496,7 @@ let lines = (function () {
             }
         }
         winLine.graphics.es();
-        linesEls.winLines.push(winLine);
+        // linesEls.winLines.push(winLine);
         winLinesContainer.addChild(winLine);
     }
 
@@ -571,7 +585,7 @@ let lines = (function () {
                                 createjs.Tween.get(element)
                                 .to({scaleX: 0.8, scaleY: 0.8}, 200)
                                 .to({scaleX: 1.1, scaleY: 1.1}, 700, createjs.Ease.bounceOut);
-                                winRectsContainer.addChild(drawTotalWin('+3').set({x: 120, y: 260, scaleX: 0.7, scaleY: 0.7}));
+                                winRectsContainer.addChild(drawTotalWin('+3').set({x: 960/2 - 70, y: 540 - 150, scaleX: 0.7, scaleY: 0.7}));
                             }
                         }
                     }
@@ -621,13 +635,13 @@ let lines = (function () {
         if (winData[0]) {
             winData = [];
             winFinishData = [];
-            linesEls.linesDiscs.forEach((disc) => {
-                disc.gotoAndStop('on');
-            });
+            // linesEls.linesDiscs.forEach((disc) => {
+            //     disc.gotoAndStop('on');
+            // });
             winLinesContainer.removeAllChildren();
             winRectsContainer.removeAllChildren();
-            linesEls.winLines = [];
-            linesEls.winRects = [];
+            // linesEls.winLines = [];
+            // linesEls.winRects = [];
         }
     }
 

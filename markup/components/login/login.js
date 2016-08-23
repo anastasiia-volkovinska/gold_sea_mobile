@@ -3,8 +3,8 @@ let login = (function () {
     let sessionID;
 
     function enter(userID, casinoID) {
-        userID = userID || 1; // КОСТЫЛЬ! Должен получать от сервера инициализации.
-        casinoID = casinoID || 1; // КОСТЫЛЬ! Должен получать от сервера инициализации.
+        userID = userID || 2; // КОСТЫЛЬ! Должен получать от сервера инициализации.
+        casinoID = casinoID || 2; // КОСТЫЛЬ! Должен получать от сервера инициализации.
         /* eslint-disable */
         utils.request('_Login', `/${userID}/${casinoID}`)
         /* eslint-enable */

@@ -150,9 +150,11 @@ let bg = (function () {
 
         function showLabelLight(){
 
-          let labelLight = new createjs.Sprite(loader.getResult('logoLight'), "go");
-          labelLight.x = 447;
-          labelLight.y = 10;
+          let labelLight = new createjs.Sprite(loader.getResult('logoLight'), "go").set({
+              name: 'labelLight',
+              x: 447,
+              y: 10
+          });
           labelLight.scaleX = labelLight.scaleX = 0.8;
           gameStaticStage.addChild(labelLight);
           labelLight.on("animationend", function(){
@@ -163,12 +165,15 @@ let bg = (function () {
         setTimeout(showLabelLight.bind(null), 7000);
 
         function showEyeLight(){
-            let eyeLight = new createjs.Bitmap(loader.getResult('eyeLight'));
-            eyeLight.x = 442;
-            eyeLight.y = 41;
-            eyeLight.regX = 18;
-            eyeLight.regY = 22;
-            eyeLight.alpha = 0;
+            let eyeLight = new createjs.Bitmap(loader.getResult('eyeLight')).set({
+                name: 'eyeLight',
+                x: 442,
+                y: 41,
+                regX: 18,
+                regY: 22,
+                alpha: 0
+
+            });
             createjs.Tween.get(eyeLight)
                 .to({alpha: 1, rotation: 20}, 200, createjs.Ease.sineIn)
                 .to({rotation: 40}, 100)

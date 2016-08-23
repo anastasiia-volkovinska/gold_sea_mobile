@@ -107,17 +107,26 @@ let balance = (function () {
         balanceText.betCash = new createjs.Text('€ '+balanceData.betCash, parameters.font, parameters.color).set(parameters.betCash);
         balanceText.winCash = new createjs.Text('€ '+balanceData.winCash, parameters.font, parameters.color).set(parameters.winCash);
 
-        balanceText.coinsCashText = new createjs.Text('Cash:', parameters.font, '#888888').set({x: 375, y: 693});
+        balanceText.coinsCashText = new createjs.Text('Cash:', parameters.font, '#888888').set({y: 693});
         balanceText.betCashText = new createjs.Text('Bet:', parameters.font, '#888888').set({x: 535, y: 693});
         balanceText.winCashText = new createjs.Text('Win:', parameters.font, '#888888').set({x: 680, y: 693});
         balanceText.coinsSumText = new createjs.Text('Coins:', 'bold 24px Helvetica', parameters.color).set({
-            x: 435,
-            y: 655
+            y: 655,
+            name: 'coinsSumText'
         });
         balanceText.betSumText = new createjs.Text('Bet:', 'bold 24px Helvetica', parameters.color).set({
             x: 625,
-            y: 655
+            y: 655,
+            name: 'betSumText'
         });
+
+        let cashWidth = (balanceText.coinsCashText).getMeasuredWidth();
+        let coinsCashWidth = (balanceText.coinsCash).getMeasuredWidth();
+        balanceText.coinsCashText.x = balanceText.coinsCash.x - 20 - cashWidth - coinsCashWidth/2;
+
+        let coinsWidth = (balanceText.coinsSumText).getMeasuredWidth();
+        let coinsSumWidth = (balanceText.coinsSum).getMeasuredWidth();
+        balanceText.coinsSumText.x = balanceText.coinsSum.x - 20 - coinsWidth - coinsSumWidth/2;
 
         balanceContainer.addChild(
             balanceText.coinsSum,
@@ -144,6 +153,12 @@ let balance = (function () {
         if (balanceText.betSum.text !== balanceData.betSum) balanceText.betSum.text = balanceData.betSum;
         if (balanceText.betCash.text.toString().slice(1) != balanceData.betCash) balanceText.betCash.text = '€ ' + balanceData.betCash;
         if (balanceText.winCash.text.toString().slice(1) != balanceData.winCash) balanceText.winCash.text = '€ ' + balanceData.winCash;
+        let cashWidth = (balanceText.coinsCashText).getMeasuredWidth();
+        let coinsCashWidth = (balanceText.coinsCash).getMeasuredWidth();
+        balanceText.coinsCashText.x = balanceText.coinsCash.x - 20 - cashWidth - coinsCashWidth/2;
+        let coinsWidth = (balanceText.coinsSumText).getMeasuredWidth();
+        let coinsSumWidth = (balanceText.coinsSum).getMeasuredWidth();
+        balanceText.coinsSumText.x = balanceText.coinsSum.x - 20 - coinsWidth - coinsSumWidth/2;
         /* eslint-enable */
         balanceStage.update();
     }

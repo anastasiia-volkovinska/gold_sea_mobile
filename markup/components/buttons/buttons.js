@@ -38,7 +38,9 @@ let buttons = (function () {
     }
 
     function drawButtons(loader) {
-        buttonsContainer = new createjs.Container();
+        buttonsContainer = new createjs.Container().set(
+            {name: 'buttonsContainer'}
+        );
         spinSprite = new createjs.Sprite(loader.getResult('spinButton')).set({
             x: 1180,
             y: 360,
