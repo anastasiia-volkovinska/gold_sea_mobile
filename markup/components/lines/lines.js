@@ -30,52 +30,52 @@ let lines = (function () {
         color: '#ddd',
         1: {
             x: 87,
-            y: 294,
+            y: 296,
             textBaseline: 'middle'
         },
         2: {
             x: 1072,
-            y: 148,
+            y: 147,
             textBaseline: 'middle'
         },
         3: {
             x: 1072,
-            y: 473,
+            y: 478,
             textBaseline: 'middle'
         },
         4: {
             x: 87,
-            y: 80,
+            y: 78,
             textBaseline: 'middle'
         },
         5: {
             x: 87,
-            y: 508,
+            y: 546,
             textBaseline: 'middle'
         },
         6: {
             x: 87,
-            y: 114,
+            y: 112,
             textBaseline: 'middle'
         },
         7: {
             x: 87,
-            y: 473,
+            y: 513,
             textBaseline: 'middle'
         },
         8: {
             x: 1072,
-            y: 363,
+            y: 365,
             textBaseline: 'middle'
         },
         9: {
             x: 87,
-            y: 260,
+            y: 261,
             textBaseline: 'middle'
         },
         10: {
             x: 87,
-            y: 440,
+            y: 445,
             textBaseline: 'middle'
         },
         11: {
@@ -85,27 +85,27 @@ let lines = (function () {
         },
         12: {
             x: 1072,
-            y: 541,
+            y: 546,
             textBaseline: 'middle'
         },
         13: {
             x: 1072,
-            y: 80,
+            y: 78,
             textBaseline: 'middle'
         },
         14: {
             x: 1072,
-            y: 508,
+            y: 513,
             textBaseline: 'middle'
         },
         15: {
             x: 1072,
-            y: 114,
+            y: 112,
             textBaseline: 'middle'
         },
         16: {
             x: 1072,
-            y: 440,
+            y: 445,
             textBaseline: 'middle'
         },
         17: {
@@ -115,22 +115,22 @@ let lines = (function () {
         },
         18: {
             x: 87,
-            y: 148,
+            y: 147,
             textBaseline: 'middle'
         },
         19: {
             x: 87,
-            y: 541,
+            y: 478,
             textBaseline: 'middle'
         },
         20: {
             x: 87,
-            y: 328,
+            y: 329,
             textBaseline: 'middle'
         },
         21: {
             x: 1072,
-            y: 329,
+            y: 331,
             textBaseline: 'middle'
         },
         22: {
@@ -217,45 +217,20 @@ let lines = (function () {
                 backStage.addChildAt(winLinesContainer, 0);
                 frontStage.addChildAt(winNumbersContainer, winRectsContainer, 0);
 
-                // drawLinesNumbers();
 
             });
         /* eslint-enable */
     }
 
-    function drawLinesNumbers() {
-        /* eslint-disable */
+    function drawLineFire(number) {
         let loader = preloader.getLoadResult();
-        /* eslint-enable */
-        let linesDiscSpriteSheet = loader.getResult('linesDisc');
-        for (let i = 0, len = linesData.linesCoords.length; i < len + 1; i++) {
-            /* eslint-disable */
-            let linesNumber = new createjs.Text(i + 1, parameters.font, parameters.color).set({
-                /* eslint-enable */
-                x: parameters[i + 1].x,
-                y: parameters[i + 1].y,
-                name: 'linesNumber_' + (i + 1),
-                textAlign: 'center',
-                /* eslint-disable */
-                shadow: new createjs.Shadow('#0f334c', 0, 0, 5)
-                /* eslint-enable */
-            });
-            if (i === len) {
-                linesNumber.text = 1;
-            }
-            /* eslint-disable */
-            let linesDisc = new createjs.Sprite(linesDiscSpriteSheet, 'on').set({
-                /* eslint-enable */
-                x: parameters[i + 1].x,
-                y: parameters[i + 1].y,
-                name: 'linesDisc_' + (i + 1),
-                regX: 15,
-                regY: 5
-            });
-            linesEls.linesDiscs.push(linesDisc);
-            linesEls.linesNumbers.push(linesNumber);
-            winNumbersContainer.addChild(linesNumber, linesDisc);
-        }
+        const ss = loader.getResult('bubblesForWinLines');
+        const lineFire = new createjs.Sprite(ss, 'go').set({
+            name: 'lineFire',
+            x: parameters[number].x - winRectsContainer.x - 42,
+            y: parameters[number].y - winRectsContainer.y - 52
+        });
+        winRectsContainer.addChild(lineFire);
     }
 
     function saveWinLines(spinWinObject) {
@@ -283,7 +258,7 @@ let lines = (function () {
                 y: (540 - 140) / 2
             });
             /* eslint-disable */
-            let totalWinText = new createjs.Text(win, 'bold 75px Trajan', '#f0e194').set({
+            let totalWinText = new createjs.Text(win, 'bold 72px Trajan', '#f0e194').set({
                 x: 111,
                 y: 70,
                 name: 'totalWinText',
@@ -294,6 +269,11 @@ let lines = (function () {
             });
             // totalWinText.x = (totalWin.width - totalWinText.getBounds().width) / 2;
             // totalWinText.y = (totalWin.height - totalWinText.getBounds().height) / 2;
+
+            let l = (totalWinText.text + '').length;
+            if (l > 3) {
+                totalWinText.font = 'bold 50px Trajan';
+            }
 
             let totalWinRect = new createjs.Bitmap(loader.getResult('winTotalRect')).set({
                 /* eslint-enable */
@@ -479,6 +459,7 @@ let lines = (function () {
         winText.addChild(winLineRect, winLineText);
         // linesEls.winRects.push(winText);
         winRectsContainer.addChild(winText);
+
     }
 
     function drawLinesShape(number) {
@@ -502,6 +483,14 @@ let lines = (function () {
 
     function drawWinLine(data, options) {
         console.log('I called with data:', data);
+        let winSoundNumber = Math.random();
+		if (winSoundNumber< 0.4){
+			createjs.Sound.play("win1");
+		} else if (winSoundNumber<0.6) {
+			createjs.Sound.play("win2");
+		} else {
+			createjs.Sound.play("win3");
+		}
 
         let defaultOptions = {
             winText: false,
@@ -522,13 +511,14 @@ let lines = (function () {
             let amount = data.amount;
             let win = data.win;
             // Если выпавшая линия не скаттер и не тройной скаттер.
-            if (number !== -1 && number !== -2) {
+            if (number !== -1) {
                 let line = linesData.linesArray[number - 1];
                 if (options.winText) {
                     drawLinesText(data);
                 }
                 if (options.winLight) {
                     drawLinesLight(linesData.linesPaths[number - 1]);
+                    drawLineFire(number);
                 }
                 if (options.winShape) {
                     drawLinesShape(number);
@@ -658,7 +648,7 @@ let lines = (function () {
     /* eslint-enable */
 
     return {
-        drawLinesNumbers,
+        drawLineFire,
         drawWinLine,
         clearAutoTimer,
         removeWinLines,

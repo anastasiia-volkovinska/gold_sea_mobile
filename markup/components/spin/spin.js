@@ -2,7 +2,7 @@
 let spin = (function () {
 
     // Consts
-    const serviceUrl = 'http://gameservice.bossgs.org/slot/SlotService.svc/';
+    const serviceUrl = 'http://gameservice.bossgs.org/testslot/SlotService.svc/';
     let elementWidth = 192; // Может поменяться от игры к игре
     let elementHeight = 180; // Может поменяться от игры к игре
     let columnsNumber = 5; // Может поменяться от игры к игре
@@ -101,8 +101,12 @@ let spin = (function () {
                 } else {
                     screen[i][j] = wls[i][inds[i] + j - 1];
                 }
+                if (typeof screen[i][j] === 'undefined'){
+                    console.warn("undefined symbol:", inds, wls);
+                }
             }
         }
+        // console.log('screen data:', screen);
         return screen;
     }
 
@@ -256,6 +260,13 @@ let spin = (function () {
                 .to({ alpha: 1}, time * 3 / 5)
                 .to({ alpha: 0}, time / 5);
             /* eslint-enable */
+            if(Math.random() > 0.5){
+                createjs.Sound.play("spinClickSound1", {volume: 0.5});
+            } else {
+                createjs.Sound.play("spinClickSound2", {volume: 0.5});
+            }
+            createjs.Sound.play("spinProcessSound");
+
         }
     }
 
@@ -378,6 +389,7 @@ let spin = (function () {
     }
 
     function spinEnd(i) {
+
         if (i === 4) {
             _requestReady()
             .then((response) => {
@@ -393,6 +405,7 @@ let spin = (function () {
                         locked = false;
                     }
                     console.log('Spin is done!');
+                    createjs.Sound.play("spinEndSound");
                     let winCash = (winCents / 100).toFixed(2);
                     let spinEndObject = {
                         autoSpinFlag,
@@ -408,6 +421,7 @@ let spin = (function () {
                     };
                     /* eslint-disable */
                     events.trigger('spinEnd', spinEndObject);
+
                     /* eslint-enable */
                     if (freeSpinFlag && mode !== 'fsBonus') {
                         setTimeout(function () {
@@ -425,6 +439,7 @@ let spin = (function () {
                     }
                     if (bonusFlag) {
                         events.trigger('initBonusLevel');
+                        events.trigger('stopAutoplay');
                         lines.removeWinScreen();
                         lines.removeWinLines();
                     }

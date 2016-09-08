@@ -1,0 +1,15 @@
+{
+    "images": ["static/img/content/bonuses/bonusWinResult.png"],
+    "frames": {
+        "width": 167,
+        "height": 167,
+        "count": 4
+    },
+    "framerate": 12,
+    "animations": {
+        "+2table": [0],
+        "+3table": [1],
+        "+4table": [2],
+        "+5table": [3]
+    }
+}

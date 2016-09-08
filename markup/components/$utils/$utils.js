@@ -1,6 +1,6 @@
 let utils = (function () {
 
-    let serviceUrl = 'http://gameservice.bossgs.org/slot/SlotService.svc/';
+    let serviceUrl = 'http://gameservice.bossgs.org/testslot/SlotService.svc/';
 
     function request(name, path) {
         console.log(`Full path of request is: ${serviceUrl}${name}${path}`);

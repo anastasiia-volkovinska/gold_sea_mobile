@@ -1,0 +1,12 @@
+{
+    "images": ["static/img/content/bg/logoLight.png"],
+    "frames": {
+        "width": 311,
+        "height": 69,
+        "count": 11
+    },
+    "framerate": 24,
+    "animations": {
+        "go": [0, 10]
+    }
+}

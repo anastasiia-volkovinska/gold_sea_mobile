@@ -1094,7 +1094,7 @@ var freeSpins = function () {
     function initFreeSpins(data) {
         fsTotalWin = 0;
         drawFreeSpinsBG();
-        fsWheels = init.getInitData().freeWheels;
+        fsWheels = login.getInitData().freeWheels;
         console.warn('FS WHEELS IS:', fsWheels);
         var wheelsLength = fsWheels.length;
         var i = void 0,

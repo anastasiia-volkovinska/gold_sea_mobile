@@ -25,6 +25,7 @@ const mainManifest = [
     {id: 'sharkBG', src: 'static/img/content/bg/sharkBG.json', type: 'spritesheet'},
     {id: 'logoLight', src: 'static/img/content/bg/logoLight.json', type: 'spritesheet'},
     {id: 'eyeLight', src: 'static/img/content/bg/eyeLight.png'},
+    {id: 'popup', src: 'static/img/content/bg/popup.png'},
     // freespin
     {id: 'vodolaz', src: 'static/img/content/freespin/vodolaz.png'},
     {id: 'sunduk', src: 'static/img/content/freespin/sunduk.png'},
@@ -53,6 +54,9 @@ const mainManifest = [
     {id: 'ramkaDiver', src: 'static/img/content/freespin/ramkaDiver.png'},
     {id: 'temnotaDiver', src: 'static/img/content/freespin/temnotaDiver.png'},
     {id: 'verevkaDiver', src: 'static/img/content/freespin/verevkaDiver.png'},
+    {id: 'chestBig', src: 'static/img/content/freespin/chestBig.png'},
+    {id: 'chestOpen', src: 'static/img/content/freespin/chestOpen.json', type: 'spritesheet'},
+    {id: 'freeSpinLevel', src: 'static/img/content/freespin/freeSpinLevel.png'},
     // bonuses
     {id: 'bonusBG', src: 'static/img/content/bonuses/bonusBG.png'},
     {id: 'bonusFG', src: 'static/img/content/bonuses/bonusFG.png'},
@@ -64,6 +68,7 @@ const mainManifest = [
     {id: 'light', src: 'static/img/content/bonuses/light.png'},
     {id: 'upperLight', src: 'static/img/content/bonuses/upperLight.png'},
     {id: 'bigFish', src: 'static/img/content/bonuses/bigFish.json', type: 'spritesheet'},
+    {id: 'bonusWinText', src: 'static/img/content/bonuses/bonusWinText.png'},
     // buttons
     {id: 'spinButton', src: 'static/img/content/buttons/spin.json', type: 'spritesheet'},
     {id: 'autoButton', src: 'static/img/content/buttons/auto.json', type: 'spritesheet'},
@@ -83,12 +88,14 @@ const mainManifest = [
     {id: 'menuMaxBet', src: 'static/img/content/menu/menuMaxBet.json', type: 'spritesheet'},
     {id: 'menuMinusPlus', src: 'static/img/content/menu/menuMinusPlus.json', type: 'spritesheet'},
     {id: 'menuBack', src: 'static/img/content/menu/menuBack.json', type: 'spritesheet'},
+    {id: 'settings', src: 'static/img/content/menu/settings.json', type: 'spritesheet'},
     // lines
     {id: 'linesDisc', src: 'static/img/content/lines/linesDisc.json', type: 'spritesheet'},
     {id: 'linesSprite', src: 'static/img/content/lines/linesSprite.json', type: 'spritesheet'},
     {id: 'winLineRect', src: 'static/img/content/lines/winLineRect.png'},
     {id: 'winTotalRect', src: 'static/img/content/lines/winTotalRect.png'},
     {id: 'winTotal', src: 'static/img/content/lines/winTotal.json', type: 'spritesheet'},
+    {id: 'bubblesForWinLines', src: 'static/img/content/lines/bubblesForWinLines.json', type: 'spritesheet'},
     // elements
     {id: 'elements', src: 'static/img/content/elements/elements.json', type: 'spritesheet'}
 ];
@@ -174,6 +181,28 @@ let preloader = ( function () {
         loader.on('complete', handleLoadComplete, loader, true, {
             container
         });
+
+        createjs.Sound.registerSounds([
+            {id: 'spinClickSound', src: 'static/img/content/sound/spinClick.wav'},
+            {id: 'spinClickSound1', src: 'static/img/content/sound/spinClickv1.wav'},
+            {id: 'spinClickSound2', src: 'static/img/content/sound/spinClickv2.wav'},
+            {id: 'buttonClickSound', src: 'static/img/content/sound/click1.wav'},
+            {id: 'spinProcessSound', src: 'static/img/content/sound/barabaniKrutyatsa.mp3'},
+            {id: 'spinEndSound', src: 'static/img/content/sound/barabanStop.wav'},
+            {id: 'fon', src: 'static/img/content/sound/Ambient.mp3'},
+            {id: 'win1', src: 'static/img/content/sound/win01.mp3'},
+            {id: 'win2', src: 'static/img/content/sound/win02.mp3'},
+            {id: 'win3', src: 'static/img/content/sound/win03.mp3'},
+            {id: 'illumWin', src: 'static/img/content/sound/illumWin2.mp3'},
+            {id: 'illumFail', src: 'static/img/content/sound/illumFail.mp3'},
+            {id: 'illuminatorBreak1', src: 'static/img/content/sound/illumBreak01.mp3'},
+            {id: 'illuminatorBreak2', src: 'static/img/content/sound/illumBreak02.mp3'},
+            {id: 'illuminatorBreak3', src: 'static/img/content/sound/illumBreak03.mp3'},
+            {id: 'transitionSound', src: 'static/img/content/sound/transitionSound.mp3'}
+
+
+
+        ]);
     }
 
     function handleFileLoad(event, data) {
@@ -210,6 +239,7 @@ let preloader = ( function () {
     }
 
     function handlePlayClick(event, data) {
+        createjs.Sound.play("buttonClickSound");
         const container = data.container;
         const game = document.querySelector('#game');
         canvas.launchFullScreen(game);
@@ -217,6 +247,7 @@ let preloader = ( function () {
         .to({alpha: 0}, 1000, createjs.Ease.circIn)
         .call(function () {
             stage.removeAllChildren();
+            createjs.Sound.play('fon', {loop: -1});
         });
     }
 

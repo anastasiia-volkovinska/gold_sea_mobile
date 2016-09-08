@@ -61,6 +61,7 @@ let buttons = (function () {
         });
         autoSprite.gotoAndStop('out');
         autoSprite.on('click', function() {
+            createjs.Sound.play("buttonClickSound");
             if (autoSprite.currentAnimation === 'out') {
                 menu.showMenu('auto');
             } else if (autoSprite.currentAnimation === 'auto') {
@@ -78,6 +79,7 @@ let buttons = (function () {
         });
         betSprite.gotoAndStop('out');
         betSprite.on('click', function() {
+            createjs.Sound.play("buttonClickSound");
             if (betSprite.currentAnimation === 'out') {
                 menu.showMenu('bet');
             }
@@ -102,13 +104,16 @@ let buttons = (function () {
         });
         if (soundMuted) {
             soundSprite.gotoAndStop('down');
+            createjs.Sound.muted = true;
         }
         soundSprite.on('click', function() {
             soundMuted = !soundMuted;
             if (soundMuted) {
                 soundSprite.gotoAndStop('down');
+                createjs.Sound.muted = true;
             } else {
                 soundSprite.gotoAndStop('out');
+                createjs.Sound.muted = false;
             }
         });
         // let soundHelper = new createjs.ButtonHelper(soundSprite);

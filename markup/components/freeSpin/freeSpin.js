@@ -6,12 +6,10 @@ let freeSpins = (function () {
     let fsWheels;
     let fsStartData;
     let fsTotalWin;
+    let fsTotalWinTitle;
+    let fsTotalWinText;
     let stage;
-    let fsWin;
-
-    function writeData(data){
-        fsWin = data.TotalWinCoins;
-    }
+    let fsTotalFreeSpins;
 
     function drawFreeSpinsBG() {
         /* eslint-disable no-undef */
@@ -27,6 +25,60 @@ let freeSpins = (function () {
         // moving elements to center
         let moveX = 60;
         let gameStage = canvas.getStages().gameStage;
+
+        fsTotalFreeSpins = 15;
+        let fsFreeSpinContainer = new createjs.Container().set({
+            name: 'fsFreeSpinContainer',
+            x: 515,
+            y: 555
+        });
+
+        let fsTotalFreeSpinsText = new createjs.Text(fsTotalFreeSpins, '48px bold Helvetica', '#fff').set({
+            name: 'fsTotalFreeSpinsText',
+            x: 67,
+            y: 65,
+            textAlign: 'center',
+            textBaseline: 'middle',
+            shadow: new createjs.Shadow('#188bb4', 0, 0, 10)
+        });
+
+        let fsTotalFreeSpins = new createjs.Bitmap(loader.getResult('freeSpinLevel')).set({
+            name: 'fsTotalFreeSpins',
+            scaleX: 0.8,
+            scaleY: 0.8
+        });
+
+        fsFreeSpinContainer.addChild(fsTotalFreeSpins, fsTotalFreeSpinsText);
+
+        let fsTotalContainer = new createjs.Container().set({
+            name: 'fsTotalContainer',
+            x: 550,
+            y: 670
+        });
+        fsTotalWinTitle = new createjs.Text('Total Win:', '24px bold Helvetica', '#fff').set({
+            name: 'fsTotalWinTitle',
+            textAlign: 'center',
+            textBaseline: 'middle'
+        });
+        fsTotalWinText = new createjs.Text('0', '32px bold Helvetica', '#1de4c3').set({
+            name: 'fsTotalWinText',
+            x: 100,
+            y: 0,
+            textAlign: 'center',
+            textBaseline: 'middle',
+            shadow: new createjs.Shadow('#1de4c3', 0, 0, 10)
+        });
+
+        fsTotalContainer.addChild(fsTotalWinTitle, fsTotalWinText);
+
+        let fsTotalWinTextWidth = fsTotalWinText.getMeasuredWidth();
+        let fsTotalWinTitleWidth = fsTotalWinTitle.getMeasuredWidth();
+
+        fsTotalWinTitle.x = fsTotalWinText.x + 30 - fsTotalWinTitleWidth - fsTotalWinTextWidth/2;
+
+        gameStage.addChild(fsFreeSpinContainer, fsTotalContainer);
+
+
         let buttonsContainer = gameStage.getChildByName('buttonsContainer');
             buttonsContainer.x = 1280 + 500;
 
@@ -47,10 +99,10 @@ let freeSpins = (function () {
             gameMachine.x = gameMachine.x + moveX;
         let balanceContainer = gameStaticStage.getChildByName('balanceContainer');
             balanceContainer.x = balanceContainer.x + moveX;
-        balanceContainer.removeChild(balanceContainer.getChildByName('coinsSum'));
-        balanceContainer.removeChild(balanceContainer.getChildByName('betSum'));
-        balanceContainer.removeChild(balanceContainer.getChildByName('coinsSumText'));
-        balanceContainer.removeChild(balanceContainer.getChildByName('betSumText'));
+        balanceContainer.getChildByName('coinsSum').visible = false;
+        balanceContainer.getChildByName('betSum').visible = false;
+        balanceContainer.getChildByName('coinsSumText').visible = false;
+        balanceContainer.getChildByName('betSumText').visible = false;
 
         createjs.Ticker.on('tick', function () {
             if(gameStaticStage.getChildByName('labelLight')) {
@@ -72,12 +124,14 @@ let freeSpins = (function () {
 
         showVodolaz();
         showChests();
+        posVodolaz = 1;
+        numberofChests = 2;
     }
 
     function initFreeSpins(data) {
         fsTotalWin = 0;
         drawFreeSpinsBG();
-        fsWheels = init.getInitData().freeWheels;
+        fsWheels = login.getInitData().freeWheels;
         console.warn('FS WHEELS IS:', fsWheels);
         let wheelsLength = fsWheels.length;
         let i, randomArray = [];
@@ -96,6 +150,9 @@ let freeSpins = (function () {
         stage.alpha = 1;
         console.warn('I am transitionning FS Mode!');
 
+        createjs.Sound.stop("fon");
+        createjs.Sound.play("transitionSound");
+
         let transitionContainer = new createjs.Container().set({
             name: 'transitionContainer',
             alpha: 0
@@ -110,14 +167,14 @@ let freeSpins = (function () {
         });
         let transitionOsminog = new createjs.Bitmap(loader.getResult('osminog')).set({
             name: 'transitionOsmonig',
-            x: 1280 - 492,
+            x: 1280 + 492,
             y: 120
             // scaleX: 1.1,
             // scaleY: 1.1
         });
         let transitionVodolaz = new createjs.Bitmap(loader.getResult('vodolaz')).set({
             name: 'transitionvodolaz',
-            x: 0,
+            x: -500,
             y: 80
         });
         let transitionButton = new createjs.Sprite(loader.getResult('continueButton'), 'out').set({
@@ -126,15 +183,40 @@ let freeSpins = (function () {
             y: 560
         });
 
+        let transitionChest = new createjs.Bitmap(loader.getResult('chestBig')).set({
+            name: 'transitionChest',
+            x: 460,
+            y: -600,
+            scaleX: 0.5,
+            scaleY: 0.5
+        });
+
         createjs.Tween.get(transitionContainer)
             .to({alpha: 1}, 500)
             .call(function () {
                 events.trigger('drawFreeSpins', fsStartData);
             });
+
+        createjs.Tween.get(transitionChest)
+        .wait(500)
+        .to({y: 150}, 1200, createjs.Ease.getBackOut(3))
+        .to({y: 330}, 800, createjs.Ease.backIn)
+
+        createjs.Tween.get(transitionVodolaz)
+        .wait(500)
+        .to({x: 0}, 1200, createjs.Ease.bounceIn)
+
+        createjs.Tween.get(transitionOsminog)
+        .wait(1000)
+        .to({x: 1280 - 492}, 1200, createjs.Ease.bounceIn)
+
         transitionButton.on('mousedown', function () {
             transitionButton.gotoAndStop('over');
         });
         transitionButton.on('click', function () {
+            createjs.Sound.stop("transitionSound");
+            createjs.Sound.play("buttonClickSound");
+            createjs.Sound.play("fon", {loop: -1, delay: 300});
             setTimeout(function () {
                 events.trigger('startFreeSpin');
             }, 1000);
@@ -142,14 +224,14 @@ let freeSpins = (function () {
                 .to({alpha: 0}, 500);
         });
 
-        transitionContainer.addChild(transitionBG, transitionText, transitionOsminog, transitionVodolaz, transitionButton);
+        transitionContainer.addChild(transitionBG, transitionText, transitionOsminog, transitionVodolaz,  transitionChest, transitionButton);
         stage.addChild(transitionContainer);
     }
 
     function startFreeSpin() {
         console.warn('I am free spin and I am called!');
         spin.spinStart(false, true);
-
+        fsTotalFreeSpins = fsTotalFreeSpins -1;
         // buttons.update
     }
 
@@ -170,59 +252,41 @@ let freeSpins = (function () {
         return fsWheels;
     }
 
+    function countTotalFreeSpins(data){
+        let loader = preloader.getLoadResult();
+        let stage = canvas.getStages().gameStage;
+        if (data.mode === 'fsBonus') {
+            if (stage.getChildByName('fsFreeSpinContainer')) {
+                fsTotalFreeSpins = data.fsCount;
+                console.warn('fsTotalFreeSpins:', fsTotalFreeSpins);
+                stage.getChildByName('fsFreeSpinContainer').getChildByName('fsTotalFreeSpinsText').text = fsTotalFreeSpins;
+            }
+        }
+    }
+
     function countTotalWin(data) {
-        let stage = canvas.getStages().bonusStage;
+        let stage = canvas.getStages().gameStage;
         if (data.mode === 'fsBonus') {
             if (stage.getChildByName('fsTotalContainer')) {
                 fsTotalWin = fsTotalWin + data.winCoins;
                 stage.getChildByName('fsTotalContainer').getChildByName('fsTotalWinText').text = fsTotalWin;
+                let fsTotalWinTextWidth = fsTotalWinText.getMeasuredWidth();
+                let fsTotalWinTitleWidth = fsTotalWinTitle.getMeasuredWidth();
+                fsTotalWinTitle.x = fsTotalWinText.x + 30 - fsTotalWinTitleWidth - fsTotalWinTextWidth/2;
+                // console.warn('fsTotalWinTitle.x', fsTotalWinTitle.x);    
             } else {
-                fsTotalWin = fsTotalWin + data.winCoins;
-                let fsTotalContainer = new createjs.Container().set({
-                    name: 'fsTotalContainer',
-                    x: 550,
-                    y: 670
-                });
-                let fsTotalWinTitle = new createjs.Text('Total Free Win:', '24px bold Helvetica', '#fff').set({
-                    name: 'fsTotalWinTitle',
-                    textAlign: 'center',
-                    textBaseline: 'middle',
-                    shadow: new createjs.Shadow('#fff', 0, 0, 10)
-                });
-                let fsTotalWinText = new createjs.Text(fsTotalWin, '32px bold Helvetica', '#1de4c3').set({
-                    name: 'fsTotalWinText',
-                    x: 110,
-                    y: 0,
-                    textAlign: 'center',
-                    textBaseline: 'middle',
-                    shadow: new createjs.Shadow('#1de4c3', 0, 0, 10)
-                });
-
-                let fsWinTitle = new createjs.Text('Win:', '24px bold Helvetica', '#fff').set({
-                    x: 190,
-                    y: 0,
-                    name: 'fsWinTitle',
-                    textAlign: 'center',
-                    textBaseline: 'middle',
-                    shadow: new createjs.Shadow('#fff', 0, 0, 10)
-                });
-                let fsWinText = new createjs.Text(fsWin, '32px bold Helvetica', '#1de4c3').set({
-                    name: 'fsWinText',
-                    x: 240,
-                    y: 0,
-                    textAlign: 'center',
-                    textBaseline: 'middle',
-                    shadow: new createjs.Shadow('#1de4c3', 0, 0, 10)
-                });
-                console.log('fsWin', fsWin); //not showing!
-                fsTotalContainer.addChild(fsTotalWinTitle, fsTotalWinText);
-                stage.addChild(fsTotalContainer);
+                // fsTotalWin = fsTotalWin + data.winCoins;
             }
         }
     }
 
     function finishFreeSpins() {
         let loader = preloader.getLoadResult();
+        let stage = canvas.getStages().bonusStage;
+        let gameStage = canvas.getStages().gameStage;
+        createjs.Sound.stop("fon");
+        createjs.Sound.play("transitionSound");
+
         let finishContainer = new createjs.Container().set({
             name: 'finishContainer',
             alpha: 0
@@ -245,44 +309,85 @@ let freeSpins = (function () {
             x: 0,
             y: 80
         });
-        let finishSunduk = new createjs.Bitmap(loader.getResult('sunduk')).set({
-            name: 'finishSunduk',
-            x: (1280 - 589) / 2,
-            y: 220
+
+        let chest = new createjs.Sprite(loader.getResult('chestOpen'), 'closed').set({
+            name: 'chest',
+            x: 400,
+            y: -600,
+            scaleX: 0.5,
+            scaleY: 0.5
         });
+
+        createjs.Tween.get(chest)
+		.wait(500)
+		.to({y: 150}, 1200, createjs.Ease.getBackOut(3))
+        .call(function () {
+            chest.gotoAndStop("open");
+        })
+        .to({y: 280}, 800, createjs.Ease.backIn);
+
+        createjs.Tween.get(finishVodolaz)
+        .wait(500)
+        .to({x: 0}, 1200, createjs.Ease.bounceIn)
+
+        createjs.Tween.get(finishOsminog)
+        .wait(1000)
+        .to({x: 1280 - 492}, 1200, createjs.Ease.bounceIn)
+
         let finishWinText = new createjs.BitmapText(fsTotalWin+'', loader.getResult('totalWinFS')).set({
-            name: 'finishWinText'
+            name: 'finishWinText',
+            scaleX: 0.5,
+            scaleY: 0.5,
+            alpha: 0
         });
         finishWinText.x = (1280 - finishWinText.getBounds().width) / 2;
         finishWinText.y = (720 - finishWinText.getBounds().height) / 2;
+        // finishWinText.regX = finishWinText.getBounds().width / 2;
+        // finishWinText.regY = finishWinText.getBounds().height / 2;
 
         let finishButton = new createjs.Sprite(loader.getResult('continueButton'), 'out').set({
             name: 'finishButton',
             x: (1280 - 396) / 2,
             y: 560
         });
-        finishContainer.addChild(finishBG, finishText, finishSunduk, finishOsminog, finishVodolaz, finishWinText, finishButton);
+        finishContainer.addChild(finishBG, finishText, chest, finishOsminog, finishVodolaz);
+
+        setTimeout(function () {
+            finishContainer.addChild(finishWinText, finishButton, finishText);
+            createjs.Tween.get(finishWinText)
+            .to({alpha: 1, scaleX: 1, scaleY: 1}, 700);
+        }, 500);
+
+
         createjs.Tween.get(finishContainer)
             .to({alpha: 1}, 500)
             .call(function () {
                 events.trigger('stopFreeSpins');
+                stage.removeChild(stage.getChildByName('chestContainer'), stage.getChildByName('vodolazContainer'));
+                console.warn('bonusStage', stage);
             });
         finishButton.on('mousedown', function () {
             finishButton.gotoAndStop('over');
         });
         finishButton.on('click', function () {
+            createjs.Sound.play("buttonClickSound");
+            createjs.Sound.stop("transitionSound");
+            createjs.Sound.play("fon", {loop: -1, delay: 300});
             createjs.Tween.get(finishContainer)
                 .to({alpha: 0}, 500)
                 .call(function () {
                     stage.removeAllChildren();
                 });
         });
-        let stage = canvas.getStages().bonusStage;
+
         stage.addChild(finishContainer);
 
         // moving elements backwards
         let moveX = 60;
-        let gameStage = canvas.getStages().gameStage;
+
+        gameStage.removeChild(gameStage.getChildByName('fsTotalContainer'));
+        gameStage.removeChild(gameStage.getChildByName('fsFreeSpinContainer'));
+
         let buttonsContainer = gameStage.getChildByName('buttonsContainer');
             buttonsContainer.x = 0;
 
@@ -303,6 +408,11 @@ let freeSpins = (function () {
             gameMachine.x = gameMachine.x - moveX;
         let balanceContainer = gameStaticStage.getChildByName('balanceContainer');
             balanceContainer.x = balanceContainer.x - moveX;
+            balanceContainer.getChildByName('coinsSum').visible = true;
+            balanceContainer.getChildByName('betSum').visible = true;
+            balanceContainer.getChildByName('coinsSumText').visible = true;
+            balanceContainer.getChildByName('betSumText').visible = true;
+            // console.log('balanceContainer:', balanceContainer);
 
         createjs.Ticker.on('tick', function () {
             if(gameStaticStage.getChildByName('labelLight')) {
@@ -322,18 +432,14 @@ let freeSpins = (function () {
             }
         });
 
-        balanceContainer.addChild(balanceContainer.getChildByName('coinsSum'));
-        balanceContainer.addChild(balanceContainer.getChildByName('betSum'));
-        balanceContainer.addChild(balanceContainer.getChildByName('coinsSumText'));
-        balanceContainer.addChild(balanceContainer.getChildByName('betSumText'));
-
     }
 
     function addMultiBonus(data) {
         let multiStage = canvas.getStages().bonusStage;
         // fsTotalWin = fsTotalWin + data.coins;
         // multiStage.getChildByName('fsTotalContainer').getChildByName('fsTotalWinText').text = fsTotalWin;
-
+        createjs.Sound.stop("fon");
+        createjs.Sound.play("transitionSound");
 
         let loader = preloader.getLoadResult();
         let multiContainer = new createjs.Container().set({
@@ -365,13 +471,53 @@ let freeSpins = (function () {
             x: (1280 - 396) / 2,
             y: 560
         });
-        multiContainer.addChild(multiBG, multiTitle, multiCoins, multiWinText, multiButton);
+
+        let multiOsminog = new createjs.Bitmap(loader.getResult('osminog')).set({
+            name: 'multiOsminog',
+            x: 1280 + 492,
+            y: 120
+        });
+        let multiVodolaz = new createjs.Bitmap(loader.getResult('vodolaz')).set({
+            name: 'multiVodolaz',
+            x: -500,
+            y: 80
+        });
+
+        let multiChest = new createjs.Sprite(loader.getResult('chestOpen'), 'closed').set({
+            name: 'multiChest',
+            x: 400,
+            y: -600,
+            scaleX: 0.5,
+            scaleY: 0.5
+        });
+
+        createjs.Tween.get(multiChest)
+		.wait(500)
+		.to({y: 150}, 1200, createjs.Ease.getBackOut(3))
+        .call(function () {
+            multiChest.gotoAndStop("open");
+        })
+        .to({y: 380}, 800, createjs.Ease.backIn);
+
+        createjs.Tween.get(multiOsminog)
+        .wait(500)
+        .to({x: 1280 - 492}, 1200, createjs.Ease.bounceIn)
+
+        createjs.Tween.get(multiVodolaz)
+        .wait(1000)
+        .to({x: 0}, 1200, createjs.Ease.bounceIn)
+
+
+        multiContainer.addChild(multiBG, multiChest, multiTitle, multiCoins, multiWinText, multiVodolaz, multiOsminog, multiButton);
         createjs.Tween.get(multiContainer)
             .to({alpha: 1}, 500);
         multiButton.on('mousedown', function () {
             multiButton.gotoAndStop('over');
         });
         multiButton.on('click', function () {
+            createjs.Sound.stop("transitionSound");
+            createjs.Sound.play("buttonClickSound");
+            createjs.Sound.play("fon", {loop: -1, delay: 300});
             utils.request('_Ready/', login.getSessionID())
                 .then((response) => {
                     if (response.ErrorCode === 0) {
@@ -412,7 +558,7 @@ let freeSpins = (function () {
     	vodolazContainer = new createjs.Container();
     	let mask = new createjs.Shape();
     	mask.graphics.s("#FFF").arc(93, 93, 93, Math.PI, 0).lt(184, 761).arc(93, 761, 93, Math.PI*2, Math.PI).cp();
-    	vodolazContainer.set({x: 7, y: 100});
+    	vodolazContainer.set({name: 'vodolazContainer', x: 7, y: 100});
     	mask.set({x: 7, y: 100, scaleX: 0.6, scaleY: 0.6});
     	vodolazContainer.mask = mask;
     	vodolazContainer.addChild(fon, verevka, onlyVodolaz, temnota, ramka, numbers, button, buttonText);
@@ -421,17 +567,17 @@ let freeSpins = (function () {
     function vodolazVniz(){
     	let newButton = button.clone();
     	let newText = buttonText.clone();
-    	newButton.y += posVodolaz*30;
-    	newText.y += posVodolaz*30;
+    	newButton.y += posVodolaz*40;
+    	newText.y += posVodolaz*40;
     	posVodolaz++;
     	newText.text = posVodolaz;
-    	temnota.y += 30;
+    	temnota.y += 40;
     	// verevka.y += 49;
     	// onlyVodolaz.y += 49;
     	createjs.Tween.get(verevka)
-    		.to({y: verevka.y + 30}, 1000, createjs.Ease.cubicIn);
+    		.to({y: verevka.y + 40}, 1000, createjs.Ease.cubicIn);
     	createjs.Tween.get(onlyVodolaz)
-    		.to({y: onlyVodolaz.y + 30}, 1000, createjs.Ease.cubicIn);
+    		.to({y: onlyVodolaz.y + 40}, 1000, createjs.Ease.cubicIn);
     	vodolazContainer.addChild(newButton, newText);
     }
 
@@ -442,17 +588,17 @@ let freeSpins = (function () {
 
     	let bgChest = new createjs.Bitmap(loader.getResult('bgChest')).set({x: 20, y: 28, scaleX: 0.6, scaleY: 0.6});
     	glassChest = new createjs.Bitmap(loader.getResult('glassChest')).set({x: 20, y: 28, scaleX: 0.6, scaleY: 0.6});
-    	chest = new createjs.Bitmap(loader.getResult('chest')).set({x: 20, y: 350, scaleX: 0.55, scaleY: 0.55});
+    	chest = new createjs.Bitmap(loader.getResult('chest')).set({x: 20, y: 340, scaleX: 0.6, scaleY: 0.6});
     	let numbersChest = new createjs.Bitmap(loader.getResult('numbersChest')).set({x: -6, y: 50, scaleX: 0.6, scaleY: 0.6});
 
-    	numberChest = new createjs.Bitmap(loader.getResult('numberChest')).set({x: -6, y: 367, scaleX: 0.6, scaleY: 0.6});
+    	numberChest = new createjs.Bitmap(loader.getResult('numberChest')).set({x: -6, y: 357, scaleX: 0.6, scaleY: 0.6});
     	numberChestText = new createjs.Text("x2", "bold 21px Arial", "#fff");
     	numberChestText.textAlign = "center";
     	numberChestText.set({x: numberChest.x + 18, y: numberChest.y + 7});
     	let ramkaChest = new createjs.Bitmap(loader.getResult('ramkaChest')).set({scaleX: 0.6, scaleY: 0.6});
     	chestContainer = new createjs.Container();
-    	chestContainer.addChild(bgChest, chest, glassChest, ramkaChest, numbersChest, numberChest, numberChestText);
-    	chestContainer.set({x: 1160, y: 160});
+    	chestContainer.addChild(bgChest, chest, glassChest, ramkaChest, numberChest, numberChestText);
+    	chestContainer.set({name: 'chestContainer', x: 1160, y: 160});
     	stage.addChildAt(chestContainer, stage.getChildByName('transitionBG'));
     }
 
@@ -495,22 +641,20 @@ let freeSpins = (function () {
 
     // trigger in spin.js
     function checkVodolaz(fsLevel){
-        // console.log('fsLevel:', fsLevel);
-        // console.log('posVodolaz', posVodolaz);
+        console.log('fsLevel:', fsLevel);
+        console.log('posVodolaz', posVodolaz);
         if (fsLevel > posVodolaz){
             vodolazVniz();
         }
     }
 
     function checkMulti(fsMulti){
-        // console.log('fsMulti:', fsMulti);
-        // console.log('numberofChests', numberofChests);
+        console.log('fsMulti:', fsMulti);
+        console.log('numberofChests', numberofChests);
         if (fsMulti > numberofChests){
             addNewChest();
         }
     }
-
-
 
     events.on('initFreeSpins', transitionFreeSpins);
     events.on('drawFreeSpins', initFreeSpins);
@@ -519,10 +663,10 @@ let freeSpins = (function () {
     events.on('finishFreeSpins', finishFreeSpins);
     events.on('startFreeSpin', startFreeSpin);
     events.on('spinEnd', countTotalWin);
+    events.on('spinEnd', countTotalFreeSpins);
     events.on('multiplierBonus', addMultiBonus);
     events.on('checkVodolaz', checkVodolaz);
     events.on('checkMulti', checkMulti);
-    events.on('spinStart', writeData);
 
     return {
         initFreeSpins,

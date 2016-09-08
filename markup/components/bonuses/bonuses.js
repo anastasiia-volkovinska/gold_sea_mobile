@@ -6,6 +6,9 @@ let bonuses = (function () {
     let bonusData;
     let clickCounter = 0;
     let levelNumber = 0;
+    let bonusContainer;
+    let currentWinText;
+    let currentWinTitle;
 
     function initBonusLevel() {
         console.warn("i am init bonus level");
@@ -14,32 +17,96 @@ let bonuses = (function () {
         stage.alpha = 1;
         stage.nextStage = null;
 
-        let darkness = new createjs.Shape();
-        darkness.graphics.beginFill('#000').drawRect(0, 0, 1280, 720);
-        darkness.alpha = 0;
-        stage.addChild(darkness);
+        createjs.Sound.stop("fon");
+        createjs.Sound.play("transitionSound");
 
-        createjs.Tween.get(darkness)
+
+        let initContainer = new createjs.Container().set({
+            name: 'initContainer',
+            alpha: 0
+        });
+        let initBG = new createjs.Bitmap(loader.getResult('multiBG')).set({
+            name: 'initBG'
+        });
+        let transitionText = new createjs.Bitmap(loader.getResult('bonusWinText')).set({
+            name: 'transitionText',
+            x: (1280 - 800) / 2,
+            y: 70
+        });
+        let transitionOsminog = new createjs.Bitmap(loader.getResult('osminog')).set({
+            name: 'transitionOsmonig',
+            x: 1280 + 492,
+            y: 120
+            // scaleX: 1.1,
+            // scaleY: 1.1
+        });
+        let transitionVodolaz = new createjs.Bitmap(loader.getResult('vodolaz')).set({
+            name: 'transitionvodolaz',
+            x: -500,
+            y: 80
+        });
+
+        let transitionChest = new createjs.Bitmap(loader.getResult('chestBig')).set({
+            name: 'transitionChest',
+            x: 460,
+            y: -600,
+            scaleX: 0.5,
+            scaleY: 0.5
+        });
+
+        let transitionButton = new createjs.Sprite(loader.getResult('continueButton'), 'out').set({
+            name: 'transitionButton',
+            x: (1280 - 396) / 2,
+            y: 560
+        });
+
+        createjs.Tween.get(initContainer)
             .to({alpha: 1}, 500)
             .call(
                 function () {
-                    console.warn("i  call getbonus level");
                     getBonusLevel();
                 }
-            )
-            .wait(200)
-            .to({alpha: 0}, 500)
-            .call(function () {
-                stage.removeChild(darkness);
-            });
+            );
+
+        createjs.Tween.get(transitionChest)
+        .wait(500)
+        .to({y: 150}, 1200, createjs.Ease.getBackOut(3))
+        .to({y: 330}, 800, createjs.Ease.backIn)
+
+        createjs.Tween.get(transitionVodolaz)
+        .wait(500)
+        .to({x: 0}, 1200, createjs.Ease.bounceIn)
+
+        createjs.Tween.get(transitionOsminog)
+        .wait(1000)
+        .to({x: 1280 - 492}, 1200, createjs.Ease.bounceIn)
+
+        transitionButton.on('mousedown', function () {
+            transitionButton.gotoAndStop('over');
+        });
+        transitionButton.on('click', function () {
+            createjs.Sound.stop("transitionSound");
+            createjs.Sound.play("buttonClickSound");
+            createjs.Sound.play("fon", {loop: -1, delay: 300});
+            createjs.Tween.get(initContainer)
+                .to({alpha: 0}, 500)
+                .call(function () {
+                    stage.removeChild(initContainer);
+                });
+        });
+
+        initContainer.addChild(initBG, transitionText, transitionChest, transitionOsminog, transitionVodolaz, transitionButton);
+        stage.addChild(initContainer);
     }
 
     function getBonusLevel() {
+        console.warn('i am entering new bonus level');
         let sessionID = login.getSessionID();
         utils.request('_Roll/', `${sessionID}/1/1`)
         .then((data) => {
             bonusData = data;
             levelNumber++;
+            clickCounter = 0;
             console.log('This is bonus data:', data);
             console.warn("levelNumber", levelNumber);
             if (bonusData.OldValues.length === 0) {
@@ -61,7 +128,7 @@ let bonuses = (function () {
 
         let stage = canvas.getStages().bonusStage;
         let loader = preloader.getLoadResult();
-        let bonusContainer = new createjs.Container().set({
+        bonusContainer = new createjs.Container().set({
             name: 'bonusContainer'
         });
         let bonusBG = new createjs.Bitmap(loader.getResult('bonusBG')).set({
@@ -129,8 +196,54 @@ let bonuses = (function () {
         });
 
         doors.push(illuminator_1, illuminator_2, illuminator_3, illuminator_4, illuminator_5);
-        bonusContainer.addChild(bonusBG, illuminatorContainer, bigFish, upperLight, upperLight2, upperLight3, bonusFG);
+
+        let bonusbalanceContainer = new createjs.Container().set({
+            name: 'bonusbalanceContainer',
+            x: 50
+        });
+
+        let footerDownBG = new createjs.Shape();
+        footerDownBG.graphics.beginFill('rgba(0, 0, 0, 1)').drawRect(0, 720 - 30, 1280, 30);
+
+        let footerUpBG = new createjs.Shape();
+        footerUpBG.graphics.beginFill('rgba(0, 0, 0, 0.6)').drawRect(0, 720 - 70, 1280, 40);
+
+
+        let currentWinContainer = new createjs.Container().set({
+            name: 'currentWinContainer',
+            x: 550,
+            y: 670
+        });
+        currentWinTitle = new createjs.Text('Total Win:', '24px bold Helvetica', '#fff').set({
+            name: 'currentWinTitle',
+            textAlign: 'center',
+            textBaseline: 'middle'
+        });
+
+        currentWinText = new createjs.Text('0', '32px bold Helvetica', '#1de4c3').set({
+            name: 'currentWinText',
+            x: 100,
+            y: 0,
+            textAlign: 'center',
+            textBaseline: 'middle',
+            shadow: new createjs.Shadow('#1de4c3', 0, 0, 10)
+        });
+
+        currentWinContainer.addChild(currentWinTitle, currentWinText);
+
+        let currentWinTextWidth = currentWinText.getMeasuredWidth();
+        let currentWinTitleWidth = currentWinTitle.getMeasuredWidth();
+        currentWinTitle.x = currentWinText.x + 30 - currentWinTitleWidth - currentWinTextWidth/2;
+
+        bonusContainer.addChild(bonusBG, illuminatorContainer, bigFish, upperLight, upperLight2, upperLight3, bonusFG, footerUpBG, footerDownBG,  bonusbalanceContainer, currentWinContainer);
         stage.addChildAt(bonusContainer, 0);
+
+        console.log('i am trying writing balance');
+        balance.writeBalance(stage, bonusbalanceContainer);
+        bonusbalanceContainer.getChildByName('coinsSum').visible = false;
+        bonusbalanceContainer.getChildByName('betSum').visible = false;
+        bonusbalanceContainer.getChildByName('coinsSumText').visible = false;
+        bonusbalanceContainer.getChildByName('betSumText').visible = false;
 
         let fishMove = new TimelineMax({repeat: -1, yoyo: true});
         fishMove.to(bigFish, 5, {y: 250})
@@ -162,8 +275,8 @@ let bonuses = (function () {
 
     function DoorLight(array){
         let blickTl = new TimelineLite();
-        blickTl.staggerTo(blicks, 1, {alpha:"0.3"}, 0.5);
-        blickTl.staggerTo(blicks, 1, {alpha:"0"}, "+=1");
+        blickTl.staggerTo(blicks, 0.3, {alpha: 0.7}, 0.1);
+        blickTl.staggerTo(blicks, 1, {alpha: 0}, "+=1");
 
         setTimeout(function () {
            DoorLight(blicks);
@@ -183,6 +296,7 @@ let bonuses = (function () {
 
                     if (bonusData.CurrentValue !== "Exit") { // Win
                         console.warn("i am in win:", bonusData);
+
                         //Win animations
                         let bonusWin = new createjs.Sprite(loader.getResult('bonusWin')).set({
                             name: 'bonuswin',
@@ -222,77 +336,65 @@ let bonuses = (function () {
                         }
                         bonusWin.play();
 
+                        let randSound = Math.random();
+                        if(randSound<0.4){
+                        	createjs.Sound.play("illuminatorBreak1", {volume: 0.5});
+                        } else if (randSound<0.7) {
+                        	createjs.Sound.play("illuminatorBreak1", {volume: 0.5});
+                        } else {
+                        	createjs.Sound.play("illuminatorBreak3", {volume: 0.5});
+                        }
+
                         let bonusWinCounter = 0;
                         bonusWin.on('animationend', function () {
                            bonusWinCounter++;
                            if (bonusWinCounter > 3) {
+
                                tl.add("scene2", 0)
                                tl.to(light, 0, {alpha:0}, "scene2");
                                tl.to(bonusWin, 0, {alpha:0, onComplete: showBonusWinResult}, "scene2");
                             }
                         });
                         function showBonusWinResult() {
+                            createjs.Sound.play("illumWin", {duration : 1200});
                             container.removeChild(bonusWin);
                             container.removeChild(light);
                             bonusWinResult.gotoAndStop(bonusData.CurrentValue+'table');
                             container.addChild(bonusWinResult);
 
+
                             if (container.getChildByName('currentWinContainer')) {
                                 container.getChildByName('currentWinContainer').getChildByName('currentWinText').text = bonusData.CurrentWinCoins;
-                            } else {
-                                let currentWinContainer = new createjs.Container().set({
-                                    name: 'currentWinContainer',
-                                    x: 550,
-                                    y: 690
-                                });
-                                let currentWinTitle = new createjs.Text('Your Bonus Win:', '24px bold Arial', '#fff').set({
-                                    name: 'currentWinTitle',
-                                    textAlign: 'center',
-                                    textBaseline: 'middle',
-                                    shadow: new createjs.Shadow('#C19433', 0, 0, 10)
-                                });
-                                let currentWinText = new createjs.Text(bonusData.CurrentWinCoins, '36px bold Arial', '#fff').set({
-                                    name: 'currentWinText',
-                                    x: 110,
-                                    y: 0,
-                                    textAlign: 'center',
-                                    textBaseline: 'middle',
-                                    shadow: new createjs.Shadow('#C19433', 0, 0, 10)
-                                });
-                                currentWinContainer.addChild(currentWinTitle, currentWinText);
-                                container.addChild(currentWinContainer);
+                                let currentWinTextWidth = currentWinText.getMeasuredWidth();
+                                let currentWinTitleWidth = currentWinTitle.getMeasuredWidth();
+                                currentWinTitle.x = currentWinText.x + 30 - currentWinTitleWidth - currentWinTextWidth/2;
+                                // console.warn('currentWinTitle.x', currentWinTitle.x);
                             }
 
                             if (bonusData.BonusEnd !== true){
                                 readyAfterBonus();
                                 setTimeout(function () {
                                     console.log("i am asking for new roll");
-                                    clickCounter = 0;
                                     // levelNumber++;
                                     getBonusLevel();
-                                }, 500);
+                                }, 300);
                             } else {
                                 if (bonusData.BonusEnd === true && bonusData.CurrentValue !== "Exit"){
                                     console.log("i won totalWin");
-                                    setTimeout(function () {
-                                        clickCounter = 0;
-                                        levelNumber = 0;
-                                        finishBonusLevel(container);
-                                        container.removeChild(container.getChildByName('currentWinContainer'));
-                                        console.warn("i call finish bonus level");
-                                        readyAfterBonus();
-                                    }, 200);
+                                    finishBonusLevel(container);
+                                    container.removeChild(container.getChildByName('currentWinContainer'));
+                                    console.warn("i call finish bonus level for win");
+                                    readyAfterBonus();
                                 }
                             }
                         }
                     } else {
                         // Fail
-                        console.warn("i am in fail");
+                        console.warn("i am in fail", bonusData);
                         container.removeChild(bonusWinResult);
                         let octopus = new createjs.Bitmap(loader.getResult('octopus')).set({
                             name: 'octopus',
                             x: 870,
-
                             y: 500,
                             regX: 145,
                             regY: 100,
@@ -331,16 +433,18 @@ let bonuses = (function () {
                             createjs.Tween.get(doors[i])
                             .to({alpha: 0}, 300);
                             container.addChildAt(tentacles[i], container.getChildIndex(el));
+
+                            createjs.Sound.stop("fon");
+                            let illumfail = createjs.Sound.play("illumFail");
+
                         }
 
+                        finishBonusLevel(container);
+                        container.removeChild(container.getChildByName('currentWinContainer'));
+                        console.warn("i call finish bonus level");
                         setTimeout(function () {
-                            clickCounter = 0;
-                            levelNumber = 0;
-                            finishBonusLevel(container);
-                            container.removeChild(container.getChildByName('currentWinContainer'));
-                            console.warn("i call finish bonus level");
                             readyAfterBonus();
-                        }, 1000);
+                        }, 300);
                     }
                 }
             });
@@ -350,6 +454,11 @@ let bonuses = (function () {
     function finishBonusLevel(container) {
         let loader = preloader.getLoadResult();
         let stage = canvas.getStages().bonusStage;
+
+        bonusContainer.removeChild(bonusContainer.getChildByName('bonusbalanceContainer'));
+        console.log('bonusContainer', bonusContainer);
+
+        createjs.Sound.play("transitionSound", {delay:1200});
 
         let finishText = new createjs.Bitmap(loader.getResult('totalWinText')).set({
             name: 'finishText',
@@ -364,26 +473,71 @@ let bonuses = (function () {
         });
 
         let finishWinText = new createjs.BitmapText(bonusData.CurrentWinCoins+'', loader.getResult('totalWinFS')).set({
-                name: 'finishWinText'
+            name: 'finishWinText',
+            scaleX: 0.5,
+            scaleY: 0.5,
+            alpha: 0
         });
 
         let l = (bonusData.CurrentWinCoins+'').length;
-        console.log("length:", l);
+        // console.log("length:", l);
 
         finishWinText.x = (1280 - l*168) / 2;
         finishWinText.y = (720 - 182) / 2;
+
+        let finishOsminog = new createjs.Bitmap(loader.getResult('osminog')).set({
+            name: 'finishOsminog',
+            x: 1280 + 492,
+            y: 120
+        });
+        let finishVodolaz = new createjs.Bitmap(loader.getResult('vodolaz')).set({
+            name: 'finishVodolaz',
+            x: -500,
+            y: 80
+        });
+
+        let chest = new createjs.Sprite(loader.getResult('chestOpen'), 'closed').set({
+            name: 'chest',
+            x: 400,
+            y: -600,
+            scaleX: 0.5,
+            scaleY: 0.5
+        });
+
+        createjs.Tween.get(chest)
+		.wait(500)
+		.to({y: 150}, 1200, createjs.Ease.getBackOut(3))
+        .call(function () {
+            chest.gotoAndStop("open");
+        })
+        .to({y: 280}, 800, createjs.Ease.backIn);
+
+        createjs.Tween.get(finishVodolaz)
+        .wait(500)
+        .to({x: 0}, 1200, createjs.Ease.bounceIn)
+
+        createjs.Tween.get(finishOsminog)
+        .wait(1000)
+        .to({x: 1280 - 492}, 1200, createjs.Ease.bounceIn)
+
+        createjs.Tween.get(finishWinText)
+        .to({alpha: 1, scaleX: 1, scaleY: 1}, 700);
 
         let darkness = new createjs.Shape();
         darkness.graphics.beginFill('#000').drawRect(0, 0, 1280, 720);
         darkness.alpha = 0;
         stage.addChild(darkness);
-        container.addChild(finishText, finishWinText, finishButton);
+
+        container.addChild(finishText, chest, finishWinText, finishButton, finishVodolaz, finishOsminog);
 
         finishButton.on('mousedown', function () {
             finishButton.gotoAndStop('over');
         });
         finishButton.on('click', function () {
 
+            createjs.Sound.stop("transitionSound");
+            createjs.Sound.play("buttonClickSound");
+            createjs.Sound.play("fon", {loop: -1, delay: 300});
             createjs.Tween.get(darkness)
             .to({alpha: 1}, 500)
             .wait(200)
@@ -391,6 +545,8 @@ let bonuses = (function () {
                 stage.removeAllChildren();
                 stage.nextStage = canvas.getStages().gameStage;
                 spin.stopBonusLevel();
+                clickCounter = 0;
+                levelNumber = 0;
             });
         });
     }

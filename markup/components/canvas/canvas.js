@@ -12,6 +12,7 @@ let canvas = (function () {
         const bonusStage = new createjs.Stage('bonusCanvas').set({name: 'bonusStage'});
         gameStage.snapToPixelEnabled = true;
         bonusStage.nextStage = gameStage;
+        gameStage.nextStage = gameStaticStage;
         bonusStage.enableMouseOver(10);
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;

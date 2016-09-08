@@ -43,6 +43,14 @@ let bg = (function () {
         createjs.Ticker.on('tick', bgStaticStage);
         createjs.Ticker.on('tick', gameStaticStage);
 
+        homeBG.on('click', function () {
+            utils.request('_Logout/', login.getSessionID())
+            .then((response) => {
+                console.log('Logout response:', response);
+            });
+            window.history.back();
+        });
+
         //BG animations
 
         let bubbleBG = new createjs.Bitmap(queue.getResult('bubbleBG'));

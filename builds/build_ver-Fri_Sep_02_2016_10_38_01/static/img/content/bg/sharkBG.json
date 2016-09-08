@@ -1,0 +1,12 @@
+{
+    "images": ["static/img/content/bg/sharkBG.png"],
+    "frames": {
+        "width": 493,
+        "height": 188,
+        "count": 12
+    },
+    "framerate": 12,
+    "animations": {
+        "move": [0, 11]
+    }
+}

@@ -15,6 +15,7 @@ let menu = (function () {
 
         menuContainer.on('click', function (event) {
             event.stopPropagation();
+            createjs.Sound.play("buttonClickSound");
         });
 
         let overlay = new createjs.Shape();
@@ -26,6 +27,7 @@ let menu = (function () {
         createjs.Tween.get(overlay)
             .to({alpha: 1}, 300);
         overlay.on('click', function (event) {
+            createjs.Sound.play("buttonClickSound");
             createjs.Tween.get(menuContainer)
                 .to({x: 1280}, 300);
             createjs.Tween.get(overlay)
@@ -44,6 +46,7 @@ let menu = (function () {
             y: 584
         });
         menuBack.on('click', function () {
+            createjs.Sound.play("buttonClickSound");
             menuBack.gotoAndStop('down');
             createjs.Tween.get(menuContainer)
             .to({x: 1280}, 300);
@@ -106,22 +109,27 @@ let menu = (function () {
                 balance.changeCoins(true, true);
                 menuBetText.text = balance.getBalanceData().betValue;
                 menuCoinsText.text = balance.getBalanceData().coinsValue;
+                createjs.Sound.play("buttonClickSound");
             });
             menuCoinPlus.on('click', function () {
                 balance.changeCoins(true);
                 menuCoinsText.text = balance.getBalanceData().coinsValue;
+                createjs.Sound.play("buttonClickSound");
             });
             menuCoinMinus.on('click', function () {
                 balance.changeCoins(false);
                 menuCoinsText.text = balance.getBalanceData().coinsValue;
+                createjs.Sound.play("buttonClickSound");
             });
             menuBetPlus.on('click', function () {
                 balance.changeBet(true);
                 menuBetText.text = balance.getBalanceData().betValue;
+                createjs.Sound.play("buttonClickSound");
             });
             menuBetMinus.on('click', function () {
                 balance.changeBet(false);
                 menuBetText.text = balance.getBalanceData().betValue;
+                createjs.Sound.play("buttonClickSound");
             });
             let menuBetLevel = new createjs.Bitmap(loader.getResult('menuBetLevel')).set({
                 name: 'menuBetLevel',
@@ -270,11 +278,104 @@ let menu = (function () {
             menuAutoButton250.on('click', _autoPlayClick);
             menuAutoButton500.on('click', _autoPlayClick);
         } else if (name === 'settings') {
-            let menuSettingsTitle = new createjs.Bitmap(loader.getResult('menuSettingsTitle')).set({
+            const menuSettingsTitle = new createjs.Bitmap(loader.getResult('menuSettingsTitle')).set({
                 name: 'menuSettingsTitle',
                 x: (305 - 219) / 2,
                 y: 35
             });
+
+            const setSS = loader.getResult('settings');
+            const soundButton = new createjs.Sprite(setSS, 'sound_on').set({
+                name: 'soundButton',
+                x: 82,
+                y: 190 - 30
+            });
+            // if (!storage.readState('sound')) {
+            //     soundButton.gotoAndStop('sound_off');
+            // }
+            // soundButton.on('click', handleSoundClick);
+            // utils.getCenterPoint(soundButton);
+            // const soundText = new c.Sprite(setSS, 'sound').set({
+            //     name: 'soundText',
+            //     x: 82 - 16,
+            //     y: 190 + 70 - 30
+            // });
+            // utils.getCenterPoint(soundText);
+            // const musicButton = new c.Sprite(setSS, 'music_on').set({
+            //     name: 'musicButton',
+            //     x: 217,
+            //     y: 190 - 30
+            // });
+            // if (!storage.readState('music')) {
+            //     musicButton.gotoAndStop('music_off');
+            // }
+            // musicButton.on('click', handleMusicClick);
+            // utils.getCenterPoint(musicButton);
+            // const musicText = new c.Sprite(setSS, 'music').set({
+            //     name: 'musicText',
+            //     x: 217 - 23,
+            //     y: 190 + 70 - 30
+            // });
+            // utils.getCenterPoint(musicText);
+            // const fastSpinButton = new c.Sprite(setSS, 'fastSpin_off').set({
+            //     name: 'fastSpinButton',
+            //     x: 82,
+            //     y: 335 - 20
+            // });
+            // if (storage.readState('fastSpinSetting')) {
+            //     fastSpinButton.gotoAndStop('fastSpin_on');
+            // }
+            // fastSpinButton.on('click', handleFastSpinClick);
+            // utils.getCenterPoint(fastSpinButton);
+            // const fastSpinText = new c.Sprite(setSS, 'fastSpin').set({
+            //     name: 'fastSpinText',
+            //     x: 82 - 3,
+            //     y: 335 + 70 - 20
+            // });
+            // utils.getCenterPoint(fastSpinText);
+            // const handModeButton = new c.Sprite(setSS, 'handMode_on').set({
+            //     name: 'handModeButton',
+            //     x: 217,
+            //     y: 335 - 20
+            // });
+            // if (storage.readState('side') === 'left') {
+            //     handModeButton.gotoAndStop('handMode_off');
+            // }
+            // handModeButton.on('click', handleHandModeClick);
+            // utils.getCenterPoint(handModeButton);
+            // const handModeText = new c.Sprite(setSS, 'handMode').set({
+            //     name: 'handModeText',
+            //     x: 217,
+            //     y: 335 + 70 - 20
+            // });
+            // utils.getCenterPoint(handModeText);
+            // const infoButton = new c.Sprite(setSS, 'info_off').set({
+            //     name: 'infoButton',
+            //     x: 82,
+            //     y: 480
+            // });
+            // infoButton.on('click', handleInfoClick);
+            // utils.getCenterPoint(infoButton);
+            // const infoText = new c.Sprite(setSS, 'info').set({
+            //     name: 'infoText',
+            //     x: 82 - 24,
+            //     y: 480 + 70
+            // });
+            // utils.getCenterPoint(infoText);
+            // const historyButton = new c.Sprite(setSS, 'history_off').set({
+            //     name: 'historyButton',
+            //     x: 217,
+            //     y: 480
+            // });
+            // historyButton.on('click', handleHistoryClick);
+            // utils.getCenterPoint(historyButton);
+            // const historyText = new c.Sprite(setSS, 'history').set({
+            //     name: 'historyText',
+            //     x: 217 - 13,
+            //     y: 480 + 70
+            // });
+            // utils.getCenterPoint(historyText);
+
             menuContainer.addChild(menuSettingsTitle);
         }
         createjs.Tween.get(menuContainer)
@@ -283,6 +384,7 @@ let menu = (function () {
 
     function _autoPlayClick() {
         /* eslint-disable no-invalid-this */
+        createjs.Sound.play("buttonClickSound");
         console.log('Amount autoPlay is:', this.amount);
         events.trigger('initAutoplay', this.amount);
         let menuContainer = canvas.getStages().bonusStage.getChildByName('menuContainer');

@@ -1,6 +1,8 @@
 let balance = (function () {
 
     let balanceStage;
+    let currencySymbol;
+    let errorFlag = false;
 
     /* eslint-disable */
     let balanceContainer = new createjs.Container().set({
@@ -93,19 +95,35 @@ let balance = (function () {
 
         balanceData.winCash = (0).toFixed(2);
         balanceData.currency = data.Currency;
+        balanceData.saved = data.Saved;
+
+        // if (balanceData.saved !== null) {
+        //     console.log('the id is wrong!');
+        //     errorFlag = true;
+        // }
+
+        if (balanceData.currency === 'USD') {
+            currencySymbol = '$ ';
+        } else if (balanceData.currency === 'EUR') {
+            currencySymbol = '€ ';
+        } else if (balanceData.currency === 'UAH') {
+            currencySymbol = '₴ ';
+        } else if (balanceData.currency === 'RUB') {
+            currencySymbol = '₽ ';
+        }
 
         /* eslint-disable */
         writeBalance();
         /* eslint-enable */
     }
 
-    function writeBalance() {
+    function writeBalance(stg = balanceStage, con = balanceContainer) {
         /* eslint-disable */
         balanceText.coinsSum = new createjs.Text(balanceData.coinsSum, parameters.font, parameters.color).set(parameters.coinsSum);
-        balanceText.coinsCash = new createjs.Text('€ '+balanceData.coinsCash, parameters.font, parameters.color).set(parameters.coinsCash);
+        balanceText.coinsCash = new createjs.Text(currencySymbol +balanceData.coinsCash, parameters.font, parameters.color).set(parameters.coinsCash);
         balanceText.betSum = new createjs.Text(balanceData.betSum, parameters.font, parameters.color).set(parameters.betSum);
-        balanceText.betCash = new createjs.Text('€ '+balanceData.betCash, parameters.font, parameters.color).set(parameters.betCash);
-        balanceText.winCash = new createjs.Text('€ '+balanceData.winCash, parameters.font, parameters.color).set(parameters.winCash);
+        balanceText.betCash = new createjs.Text(currencySymbol +balanceData.betCash, parameters.font, parameters.color).set(parameters.betCash);
+        balanceText.winCash = new createjs.Text(currencySymbol +balanceData.winCash, parameters.font, parameters.color).set(parameters.winCash);
 
         balanceText.coinsCashText = new createjs.Text('Cash:', parameters.font, '#888888').set({y: 693});
         balanceText.betCashText = new createjs.Text('Bet:', parameters.font, '#888888').set({x: 535, y: 693});
@@ -127,8 +145,9 @@ let balance = (function () {
         let coinsWidth = (balanceText.coinsSumText).getMeasuredWidth();
         let coinsSumWidth = (balanceText.coinsSum).getMeasuredWidth();
         balanceText.coinsSumText.x = balanceText.coinsSum.x - 20 - coinsWidth - coinsSumWidth/2;
+        // console.warn('balanceText.coinsSumText.x: ', balanceText.coinsCashText.x , balanceText.coinsSumText.x );
 
-        balanceContainer.addChild(
+        con.addChild(
             balanceText.coinsSum,
             balanceText.coinsCash,
             balanceText.betSum,
@@ -140,19 +159,20 @@ let balance = (function () {
             balanceText.coinsSumText,
             balanceText.betSumText
         );
-
-        balanceStage.addChild(balanceContainer);
-        balanceStage.update();
+        if (!stg.contains(con)) {
+            stg.addChild(con);
+        }
+        stg.update();
         /* eslint-enable */
     }
 
     function updateBalance() {
         /* eslint-disable */
         if (balanceText.coinsSum.text !== balanceData.coinsSum) balanceText.coinsSum.text = balanceData.coinsSum;
-        if (balanceText.coinsCash.text.toString().slice(1) != balanceData.coinsCash) balanceText.coinsCash.text = '€ ' + balanceData.coinsCash;
+        if (balanceText.coinsCash.text.toString().slice(1) != balanceData.coinsCash) balanceText.coinsCash.text = currencySymbol + balanceData.coinsCash;
         if (balanceText.betSum.text !== balanceData.betSum) balanceText.betSum.text = balanceData.betSum;
-        if (balanceText.betCash.text.toString().slice(1) != balanceData.betCash) balanceText.betCash.text = '€ ' + balanceData.betCash;
-        if (balanceText.winCash.text.toString().slice(1) != balanceData.winCash) balanceText.winCash.text = '€ ' + balanceData.winCash;
+        if (balanceText.betCash.text.toString().slice(1) != balanceData.betCash) balanceText.betCash.text = currencySymbol + balanceData.betCash;
+        if (balanceText.winCash.text.toString().slice(1) != balanceData.winCash) balanceText.winCash.text = currencySymbol + balanceData.winCash;
         let cashWidth = (balanceText.coinsCashText).getMeasuredWidth();
         let coinsCashWidth = (balanceText.coinsCash).getMeasuredWidth();
         balanceText.coinsCashText.x = balanceText.coinsCash.x - 20 - cashWidth - coinsCashWidth/2;
@@ -266,8 +286,46 @@ let balance = (function () {
     }
     /* eslint-enable */
 
+    function error(text, loader) {
+        if (errorFlag === true) {
+        // console.log('popup', text, loader);
+            const stage = canvas.getStages().gameStage;;
+            // const loader = preloader.getLoadResult();
+            const errorPopup = new createjs.Bitmap(loader.getResult('popup')).set({
+                name: 'errorPopup',
+                x: 1280 / 2,
+                y: 720 / 2
+            });
+            const bounds = errorPopup.getBounds();
+            errorPopup.regX = bounds.width / 2;
+            errorPopup.regY = bounds.height / 2;
+            const errorText = new createjs.Text(text, '50px Arial', '#fff').set({
+                name: 'errorText',
+                x: 1280 / 2,
+                y: 720 / 2,
+                textAlign: 'center',
+                textBaseline: 'middle'
+            });
+            const errorContainer = new createjs.Container().set({
+                name: 'errorContainer'
+            });
+            errorContainer.addChild(errorPopup, errorText);
+
+            stage.addChild(errorContainer);
+
+            errorContainer.on('click', function () {
+                createjs.Tween.get(errorContainer)
+                    .to({alpha: 0}, 500)
+                    .call(function () {
+                        stage.removeChild(errorContainer);
+                    });
+            });
+        }
+    }
+
     /* eslint-disable */
     events.on('dataDownloaded', initBalance);
+    events.on('preloadComplete', error.bind(null, 'Wrong ID!'));
     events.on('changeBet', changeBet);
     events.on('changeCoins', changeCoins);
     events.on('spinStart', spinStart);
@@ -277,6 +335,8 @@ let balance = (function () {
     return {
         getBalanceData,
         changeBet,
-        changeCoins
+        changeCoins,
+        writeBalance,
+        error
     };
 })();
