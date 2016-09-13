@@ -7,7 +7,7 @@ let buttons = (function () {
     let spinSprite;
     let betSprite;
     let soundSprite;
-    let soundMuted = true;
+    let soundMuted = false;
     let autoMode;
     let autoText;
     let fsMode;
@@ -102,10 +102,10 @@ let buttons = (function () {
             y: 570,
             name: 'soundSprite'
         });
-        if (soundMuted) {
-            soundSprite.gotoAndStop('down');
-            createjs.Sound.muted = true;
-        }
+        // if (!menu.getSoundFlag) {
+        //     soundSprite.gotoAndStop('down');
+        //     createjs.Sound.muted = true;
+        // }
         soundSprite.on('click', function() {
             soundMuted = !soundMuted;
             if (soundMuted) {

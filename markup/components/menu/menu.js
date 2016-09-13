@@ -1,13 +1,24 @@
+/* eslint-disable */
+
 let menu = (function () {
     /* eslint-disable no-undef */
     /* eslint-disable no-use-before-define */
+    let musicOff = false;
+    let soundOff = false;
+    let fastSpinOn = false;
+    let handModeOn = false;
+    let menuContainer;
+    let overlay;
+    let menuBack;
+    let menuBG;
+
     function showMenu(name) {
         let loader = preloader.getLoadResult();
         let bonusStage = canvas.getStages().bonusStage;
         let bonusStaticStage = canvas.getStages().bonusStaticStage;
         bonusStage.alpha = 1;
 
-        let menuContainer = new createjs.Container().set({
+        menuContainer = new createjs.Container().set({
             x: 1280,
             y: 0,
             name: 'menuContainer'
@@ -18,7 +29,7 @@ let menu = (function () {
             createjs.Sound.play("buttonClickSound");
         });
 
-        let overlay = new createjs.Shape();
+        overlay = new createjs.Shape();
         overlay.set({
             name: 'overlay',
             alpha: 0
@@ -37,10 +48,10 @@ let menu = (function () {
         bonusStage.addChildAt(overlay, 0);
         bonusStage.addChild(menuContainer);
 
-        let menuBG = new createjs.Bitmap(loader.getResult('menuBG')).set({
+        menuBG = new createjs.Bitmap(loader.getResult('menuBG')).set({
             name: 'menuBG'
         });
-        let menuBack = new createjs.Sprite(loader.getResult('menuBack')).set({
+        menuBack = new createjs.Sprite(loader.getResult('menuBack')).set({
             name: 'menuBack',
             x: (305 - 105) / 2,
             y: 584
@@ -285,101 +296,193 @@ let menu = (function () {
             });
 
             const setSS = loader.getResult('settings');
+
             const soundButton = new createjs.Sprite(setSS, 'sound_on').set({
                 name: 'soundButton',
-                x: 82,
-                y: 190 - 30
+                x: 92,
+                y: 180 - 30,
+                regX: 55,
+                regY: 55
             });
-            // if (!storage.readState('sound')) {
-            //     soundButton.gotoAndStop('sound_off');
-            // }
-            // soundButton.on('click', handleSoundClick);
-            // utils.getCenterPoint(soundButton);
-            // const soundText = new c.Sprite(setSS, 'sound').set({
-            //     name: 'soundText',
-            //     x: 82 - 16,
-            //     y: 190 + 70 - 30
-            // });
-            // utils.getCenterPoint(soundText);
-            // const musicButton = new c.Sprite(setSS, 'music_on').set({
-            //     name: 'musicButton',
-            //     x: 217,
-            //     y: 190 - 30
-            // });
-            // if (!storage.readState('music')) {
-            //     musicButton.gotoAndStop('music_off');
-            // }
-            // musicButton.on('click', handleMusicClick);
-            // utils.getCenterPoint(musicButton);
-            // const musicText = new c.Sprite(setSS, 'music').set({
-            //     name: 'musicText',
-            //     x: 217 - 23,
-            //     y: 190 + 70 - 30
-            // });
-            // utils.getCenterPoint(musicText);
-            // const fastSpinButton = new c.Sprite(setSS, 'fastSpin_off').set({
-            //     name: 'fastSpinButton',
-            //     x: 82,
-            //     y: 335 - 20
-            // });
-            // if (storage.readState('fastSpinSetting')) {
-            //     fastSpinButton.gotoAndStop('fastSpin_on');
-            // }
-            // fastSpinButton.on('click', handleFastSpinClick);
-            // utils.getCenterPoint(fastSpinButton);
-            // const fastSpinText = new c.Sprite(setSS, 'fastSpin').set({
-            //     name: 'fastSpinText',
-            //     x: 82 - 3,
-            //     y: 335 + 70 - 20
-            // });
-            // utils.getCenterPoint(fastSpinText);
-            // const handModeButton = new c.Sprite(setSS, 'handMode_on').set({
-            //     name: 'handModeButton',
-            //     x: 217,
-            //     y: 335 - 20
-            // });
-            // if (storage.readState('side') === 'left') {
-            //     handModeButton.gotoAndStop('handMode_off');
-            // }
-            // handModeButton.on('click', handleHandModeClick);
-            // utils.getCenterPoint(handModeButton);
-            // const handModeText = new c.Sprite(setSS, 'handMode').set({
-            //     name: 'handModeText',
-            //     x: 217,
-            //     y: 335 + 70 - 20
-            // });
-            // utils.getCenterPoint(handModeText);
-            // const infoButton = new c.Sprite(setSS, 'info_off').set({
-            //     name: 'infoButton',
-            //     x: 82,
-            //     y: 480
-            // });
-            // infoButton.on('click', handleInfoClick);
-            // utils.getCenterPoint(infoButton);
-            // const infoText = new c.Sprite(setSS, 'info').set({
-            //     name: 'infoText',
-            //     x: 82 - 24,
-            //     y: 480 + 70
-            // });
-            // utils.getCenterPoint(infoText);
-            // const historyButton = new c.Sprite(setSS, 'history_off').set({
-            //     name: 'historyButton',
-            //     x: 217,
-            //     y: 480
-            // });
-            // historyButton.on('click', handleHistoryClick);
-            // utils.getCenterPoint(historyButton);
-            // const historyText = new c.Sprite(setSS, 'history').set({
-            //     name: 'historyText',
-            //     x: 217 - 13,
-            //     y: 480 + 70
-            // });
-            // utils.getCenterPoint(historyText);
 
-            menuContainer.addChild(menuSettingsTitle);
+            const soundText = new createjs.Sprite(setSS, 'sound').set({
+                name: 'soundText',
+                x: 92 - 50,
+                y: 180 + 40
+            });
+
+            soundButton.on('click', function () {
+                soundOff = !soundOff;
+
+                if (!soundOff) {
+                    soundButton.gotoAndStop('sound_off');
+                    createjs.Sound.muted = true;
+                } else {
+                    soundButton.gotoAndStop('sound_on');
+                    createjs.Sound.muted = false;
+                }
+                // Внешний вид кнопок
+            });
+
+            const musicButton = new createjs.Sprite(setSS, 'music_on').set({
+                name: 'musicButton',
+                x: 226,
+                y: 180 - 30,
+                regX: 55,
+                regY: 55
+            });
+
+            const musicText = new createjs.Sprite(setSS, 'music').set({
+                name: 'musicText',
+                x: 226 - 50,
+                y: 180 + 40
+            });
+
+            musicButton.on('click', function () {
+                musicOff = !musicOff;
+
+                if (!musicOff) {
+                    musicButton.gotoAndStop('music_off');
+                    preloader.getBackgroundSound().volume = 0;
+                } else {
+                    musicButton.gotoAndStop('music_on');
+                    preloader.getBackgroundSound().volume = 1;
+                }
+                // Внешний вид кнопок
+            });
+
+            const fastSpinButton = new createjs.Sprite(setSS, 'fastSpin_off').set({
+                name: 'fastSpinButton',
+                x: 92,
+                y: 335 - 20,
+                regX: 55,
+                regY: 55
+            });
+
+            const fastSpinText = new createjs.Sprite(setSS, 'fastSpin').set({
+                name: 'fastSpinText',
+                x: 92 - 50,
+                y: 335 + 50
+            });
+
+            fastSpinButton.on('click', function () {
+                fastSpinOn = !fastSpinOn;
+
+                if (!fastSpinOn) {
+                    fastSpinButton.gotoAndStop('fastSpin_off');
+                } else {
+                    fastSpinButton.gotoAndStop('fastSpin_on');
+                }
+                // Внешний вид кнопок
+            });
+
+            const handModeButton = new createjs.Sprite(setSS, 'handMode_on').set({
+                name: 'handModeButton',
+                x: 226,
+                y: 335 - 20,
+                regX: 55,
+                regY: 55
+            });
+
+            const handModeText = new createjs.Sprite(setSS, 'handMode').set({
+                name: 'handModeText',
+                x: 226 - 50,
+                y: 335 + 50
+            });
+
+            handModeButton.on('click', function () {
+                handModeOn = !handModeOn;
+
+                if (!handModeOn) {
+                    handleHandMode('right');
+                } else {
+                    handleHandMode('left');
+                }
+            });
+
+            const infoButton = new createjs.Sprite(setSS, 'info_on').set({
+                name: 'infoButton',
+                x: 92,
+                y: 480,
+                regX: 55,
+                regY: 55
+            });
+
+            const infoText = new createjs.Sprite(setSS, 'info').set({
+                name: 'infoText',
+                x: 92 - 50,
+                y: 480 + 70
+            });
+
+            const rulesContainer = new createjs.Container().set({
+                name: 'rulesContainer',
+                alpha: 0
+            });
+
+            const rules = new createjs.Bitmap(loader.getResult('rules')).set({
+                name: 'rules'
+            });
+
+            const playButton = new createjs.Sprite(loader.getResult('continueButton'), 'out').set({
+                name: 'playButton',
+                x: (1280 - 396) - 100,
+                y: 500
+            });
+
+            rulesContainer.addChild(rules, playButton);
+            bonusStage.addChild(rulesContainer);
+
+            infoButton.on('click', function () {
+                createjs.Tween.get(rulesContainer)
+                .to({alpha: 1});
+            });
+
+            playButton.on('click', function () {
+                createjs.Tween.get(rulesContainer)
+                .to({alpha: 0});
+            });
+
+            const historyButton = new createjs.Sprite(setSS, 'history_on').set({
+                name: 'historyButton',
+                x: 226,
+                y: 480,
+                regX: 55,
+                regY: 55
+            });
+
+            const historyText = new createjs.Sprite(setSS, 'history').set({
+                name: 'historyText',
+                x: 226 - 50,
+                y: 480 + 70
+            });
+
+            historyButton.on('click', function () {
+                balance.error('Comming soon!');
+            });
+
+            menuContainer.addChild(menuSettingsTitle, soundButton, soundText, musicButton, musicText, fastSpinButton, fastSpinText, handModeButton, handModeText, infoButton, infoText, historyButton, historyText);
         }
-        createjs.Tween.get(menuContainer)
-            .to({x: 1280 - 302}, 300);
+
+        // Выезд меню контейнера
+        if (!handModeOn) {
+            createjs.Tween.get(menuContainer)
+                .to({x: 1280 - 302}, 300);
+        } else {
+            menuContainer.x = -300;
+            createjs.Tween.get(menuContainer)
+                .to({x: 0}, 300);
+
+            overlay.on('click', function (event) {
+                createjs.Tween.get(menuContainer, {override:true})
+                    .to({x: -500}, 300);
+            });
+
+            menuBack.on('click', function () {
+                createjs.Tween.get(menuContainer, {override:true})
+                .to({x: -500}, 300);
+            });
+        }
+
     }
 
     function _autoPlayClick() {
@@ -406,8 +509,150 @@ let menu = (function () {
         bonusStage.nextStage = canvas.getStages().gameStage;
     }
 
+    function getFastSpin() {
+        return fastSpinOn;
+    }
+
+    function getMusicFlag() {
+        return musicOff;
+    }
+
+    function getSoundFlag() {
+        return soundOff;
+    }
+
+    function handleHandMode(side){
+        console.log('side', side);
+        if (side === 'left') {
+            let moveX = 130;
+
+            // createjs.Tween.get(menuBG)
+            //     .to({skewX: 180}, 300)
+
+            menuContainer.x = 0;
+
+            overlay.on('click', function (event) {
+                createjs.Tween.get(menuContainer, {override:true})
+                    .to({x: -500}, 300);
+            });
+
+            menuBack.on('click', function () {
+                createjs.Tween.get(menuContainer, {override:true})
+                .to({x: -500}, 300);
+            });
+
+            let gameStage = canvas.getStages().gameStage;
+
+            let buttonsContainer = gameStage.getChildByName('buttonsContainer');
+                buttonsContainer.x = -1200;
+                console.log('buttonsContainer', buttonsContainer);
+
+            let winRectsContainer = canvas.getStages().gameStage;
+                winRectsContainer.x = winRectsContainer.x + moveX;
+
+            let bgStage = canvas.getStages().bgStage;
+            let gameContainer = bgStage.getChildByName('gameContainer');
+                gameContainer.x = gameContainer.x + moveX;
+                gameContainer.mask.x = gameContainer.mask.x + moveX;
+            let winLinesContainer = bgStage.getChildByName('winLinesContainer');
+                winLinesContainer.x = winLinesContainer.x + moveX;
+
+            let bgStaticStage = canvas.getStages().bgStaticStage;
+            let gameBG = bgStaticStage.getChildByName('gameBG');
+                gameBG.x = gameBG.x + moveX;
+
+            let gameStaticStage = canvas.getStages().gameStaticStage;
+            let gameMachine = gameStaticStage.getChildByName('gameMachine');
+                gameMachine.x = gameMachine.x + moveX;
+            let balanceContainer = gameStaticStage.getChildByName('balanceContainer');
+                balanceContainer.x = balanceContainer.x + moveX;
+
+            createjs.Ticker.on('tick', function () {
+                if(gameStaticStage.getChildByName('labelLight')) {
+                    let labelLight = gameStaticStage.getChildByName('labelLight');
+                    labelLight.x = 577;
+                } else {
+                    return;
+                }
+            });
+
+            createjs.Ticker.on('tick', function () {
+                if(gameStaticStage.getChildByName('eyeLight')) {
+                    let eyeLight = gameStaticStage.getChildByName('eyeLight');
+                    eyeLight.x = 572;
+                } else {
+                    return;
+                }
+            });
+        } else {
+            let moveX = -130;
+
+            menuContainer.x = 1000;
+
+            // createjs.Tween.get(menuBG)
+            //     .to({skewX: 180}, 300)
+
+            overlay.on('click', function (event) {
+                createjs.Tween.get(menuContainer, {override:true})
+                    .to({x: 1280}, 300);
+            });
+
+            menuBack.on('click', function () {
+                createjs.Tween.get(menuContainer, {override:true})
+                .to({x: 1280}, 300);
+            });
+
+            let gameStage = canvas.getStages().gameStage;
+
+            let buttonsContainer = gameStage.getChildByName('buttonsContainer');
+                buttonsContainer.x = buttonsContainer.x + 1200;
+                console.log('buttonsContainer', buttonsContainer);
+
+            let winRectsContainer = canvas.getStages().gameStage;
+                winRectsContainer.x = winRectsContainer.x + moveX;
+
+            let bgStage = canvas.getStages().bgStage;
+            let gameContainer = bgStage.getChildByName('gameContainer');
+                gameContainer.x = gameContainer.x + moveX;
+                gameContainer.mask.x = gameContainer.mask.x + moveX;
+            let winLinesContainer = bgStage.getChildByName('winLinesContainer');
+                winLinesContainer.x = winLinesContainer.x + moveX;
+
+            let bgStaticStage = canvas.getStages().bgStaticStage;
+            let gameBG = bgStaticStage.getChildByName('gameBG');
+                gameBG.x = gameBG.x + moveX;
+
+            let gameStaticStage = canvas.getStages().gameStaticStage;
+            let gameMachine = gameStaticStage.getChildByName('gameMachine');
+                gameMachine.x = gameMachine.x + moveX;
+            let balanceContainer = gameStaticStage.getChildByName('balanceContainer');
+                balanceContainer.x = balanceContainer.x + moveX;
+
+            createjs.Ticker.on('tick', function () {
+                if(gameStaticStage.getChildByName('labelLight')) {
+                    let labelLight = gameStaticStage.getChildByName('labelLight');
+                    labelLight.x = 447;
+                } else {
+                    return;
+                }
+            });
+
+            createjs.Ticker.on('tick', function () {
+                if(gameStaticStage.getChildByName('eyeLight')) {
+                    let eyeLight = gameStaticStage.getChildByName('eyeLight');
+                    eyeLight.x = 442;
+                } else {
+                    return;
+                }
+            });
+        }
+    }
+
     return {
         showMenu,
-        hideMenu
+        hideMenu,
+        getFastSpin,
+        getMusicFlag,
+        getSoundFlag
     };
 })();

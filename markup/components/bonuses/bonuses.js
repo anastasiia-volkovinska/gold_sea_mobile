@@ -87,7 +87,10 @@ let bonuses = (function () {
         transitionButton.on('click', function () {
             createjs.Sound.stop("transitionSound");
             createjs.Sound.play("buttonClickSound");
-            createjs.Sound.play("fon", {loop: -1, delay: 300});
+
+            if (menu.getMusicFlag()){
+                createjs.Sound.play("fon", {loop: -1, delay: 300});
+            }
             createjs.Tween.get(initContainer)
                 .to({alpha: 0}, 500)
                 .call(function () {
@@ -344,11 +347,11 @@ let bonuses = (function () {
                         } else {
                         	createjs.Sound.play("illuminatorBreak3", {volume: 0.5});
                         }
-
+                        createjs.Sound.play("illumWin", {duration: 1500});
                         let bonusWinCounter = 0;
                         bonusWin.on('animationend', function () {
-                           bonusWinCounter++;
-                           if (bonusWinCounter > 3) {
+                            bonusWinCounter++;
+                            if (bonusWinCounter > 3) {
 
                                tl.add("scene2", 0)
                                tl.to(light, 0, {alpha:0}, "scene2");
@@ -356,7 +359,7 @@ let bonuses = (function () {
                             }
                         });
                         function showBonusWinResult() {
-                            createjs.Sound.play("illumWin", {duration : 1200});
+
                             container.removeChild(bonusWin);
                             container.removeChild(light);
                             bonusWinResult.gotoAndStop(bonusData.CurrentValue+'table');
@@ -537,7 +540,9 @@ let bonuses = (function () {
 
             createjs.Sound.stop("transitionSound");
             createjs.Sound.play("buttonClickSound");
-            createjs.Sound.play("fon", {loop: -1, delay: 300});
+            if (menu.getMusicFlag()){
+                createjs.Sound.play("fon", {loop: -1, delay: 300});
+            }
             createjs.Tween.get(darkness)
             .to({alpha: 1}, 500)
             .wait(200)

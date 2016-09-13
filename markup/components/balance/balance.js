@@ -97,6 +97,8 @@ let balance = (function () {
         balanceData.currency = data.Currency;
         balanceData.saved = data.Saved;
 
+
+
         // if (balanceData.saved !== null) {
         //     console.log('the id is wrong!');
         //     errorFlag = true;
@@ -286,8 +288,8 @@ let balance = (function () {
     }
     /* eslint-enable */
 
-    function error(text, loader) {
-        if (errorFlag === true) {
+    function error(text) {
+        let loader = preloader.getLoadResult();
         // console.log('popup', text, loader);
             const stage = canvas.getStages().gameStage;;
             // const loader = preloader.getLoadResult();
@@ -320,12 +322,11 @@ let balance = (function () {
                         stage.removeChild(errorContainer);
                     });
             });
-        }
     }
 
     /* eslint-disable */
     events.on('dataDownloaded', initBalance);
-    events.on('preloadComplete', error.bind(null, 'Wrong ID!'));
+    // events.on('preloadComplete', error.bind(null, 'Wrong ID!'));
     events.on('changeBet', changeBet);
     events.on('changeCoins', changeCoins);
     events.on('spinStart', spinStart);

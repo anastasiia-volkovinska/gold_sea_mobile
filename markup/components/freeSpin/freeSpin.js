@@ -216,7 +216,11 @@ let freeSpins = (function () {
         transitionButton.on('click', function () {
             createjs.Sound.stop("transitionSound");
             createjs.Sound.play("buttonClickSound");
-            createjs.Sound.play("fon", {loop: -1, delay: 300});
+
+            console.warn('menu.getMusicFlag', menu.getMusicFlag());
+            if (menu.getMusicFlag()){
+                createjs.Sound.play("fon", {loop: -1, delay: 300});
+            }
             setTimeout(function () {
                 events.trigger('startFreeSpin');
             }, 1000);
@@ -273,7 +277,7 @@ let freeSpins = (function () {
                 let fsTotalWinTextWidth = fsTotalWinText.getMeasuredWidth();
                 let fsTotalWinTitleWidth = fsTotalWinTitle.getMeasuredWidth();
                 fsTotalWinTitle.x = fsTotalWinText.x + 30 - fsTotalWinTitleWidth - fsTotalWinTextWidth/2;
-                // console.warn('fsTotalWinTitle.x', fsTotalWinTitle.x);    
+                // console.warn('fsTotalWinTitle.x', fsTotalWinTitle.x);
             } else {
                 // fsTotalWin = fsTotalWin + data.winCoins;
             }
@@ -372,7 +376,9 @@ let freeSpins = (function () {
         finishButton.on('click', function () {
             createjs.Sound.play("buttonClickSound");
             createjs.Sound.stop("transitionSound");
-            createjs.Sound.play("fon", {loop: -1, delay: 300});
+            if (menu.getMusicFlag()){
+                createjs.Sound.play("fon", {loop: -1, delay: 300});
+            }
             createjs.Tween.get(finishContainer)
                 .to({alpha: 0}, 500)
                 .call(function () {

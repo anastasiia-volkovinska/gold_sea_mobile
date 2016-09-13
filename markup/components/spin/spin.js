@@ -231,7 +231,7 @@ let spin = (function () {
                 });
                 gameContainer.addChild(columns[i], shadow);
             }
-            animateSpin();
+            animateSpin(menu.getFastSpin());
         } else {
 
             for (i = 0; i < columnsNumber; i++) {
@@ -245,12 +245,15 @@ let spin = (function () {
         /* eslint-enable */
     }
 
-    function animateSpin() {
+    function animateSpin(flag) {
         let i, time = 1000;
         /* eslint-disable */
         let gameStage = canvas.getStages().bgStage;
         for (i = 0; i < columns.length; i++) {
             time += 400;
+            if (flag){
+                time = time/2;
+            }
             let shadow = gameStage.getChildByName('gameContainer').getChildByName('gameShadow' + i);
             createjs.Tween.get(columns[i])
                 .to({ y: -elementHeight}, time, createjs.Ease.getBackInOut(0.5))
@@ -293,6 +296,10 @@ let spin = (function () {
         autoSpinFlag = autoSpin;
         _requestSpin()
             .then((data) => {
+                if (data.ErrorMessage) {
+                    balance.error(data.ErrorMessage);
+                    return;
+                }
                 console.log('Spin data:', data);
                 if (data.Type === 'Simple') {
                     /* eslint-disable */

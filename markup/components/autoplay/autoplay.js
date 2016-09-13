@@ -13,6 +13,9 @@ let autoplay = (function () {
     function startAutoplay() {
         console.log('I am starting autoplay!');
         autoCount--;
+        // if (balance.getBalanceData().coinsSum < balance.getBalanceData().betSum) {
+        //     balance.error('You have low balance');
+        // }
         if (!autoEnd) {
             spin.spinStart(true);
         }

@@ -26,6 +26,7 @@ const mainManifest = [
     {id: 'logoLight', src: 'static/img/content/bg/logoLight.json', type: 'spritesheet'},
     {id: 'eyeLight', src: 'static/img/content/bg/eyeLight.png'},
     {id: 'popup', src: 'static/img/content/bg/popup.png'},
+    {id: 'rules', src: 'static/img/content/bg/rules.png'},
     // freespin
     {id: 'vodolaz', src: 'static/img/content/freespin/vodolaz.png'},
     {id: 'sunduk', src: 'static/img/content/freespin/sunduk.png'},
@@ -104,6 +105,7 @@ let preloader = ( function () {
 
     // Stage
     let stage;
+    let backgroundSound;
 
     // Data
     let loadResult;
@@ -199,9 +201,6 @@ let preloader = ( function () {
             {id: 'illuminatorBreak2', src: 'static/img/content/sound/illumBreak02.mp3'},
             {id: 'illuminatorBreak3', src: 'static/img/content/sound/illumBreak03.mp3'},
             {id: 'transitionSound', src: 'static/img/content/sound/transitionSound.mp3'}
-
-
-
         ]);
     }
 
@@ -239,7 +238,7 @@ let preloader = ( function () {
     }
 
     function handlePlayClick(event, data) {
-        createjs.Sound.play("buttonClickSound");
+        createjs.Sound.play('buttonClickSound');
         const container = data.container;
         const game = document.querySelector('#game');
         canvas.launchFullScreen(game);
@@ -247,8 +246,13 @@ let preloader = ( function () {
         .to({alpha: 0}, 1000, createjs.Ease.circIn)
         .call(function () {
             stage.removeAllChildren();
-            createjs.Sound.play('fon', {loop: -1});
+            backgroundSound = createjs.Sound.play('fon', {loop: -1});
+            // console.log('Back sound', background);
         });
+    }
+
+    function getBackgroundSound(data) {
+        return utils.getData(backgroundSound);
     }
 
     function getLoadResult() {
@@ -259,7 +263,8 @@ let preloader = ( function () {
     events.on('initPreloader', downloadManifest);
     /* eslint-enable */
     return {
-        getLoadResult
+        getLoadResult,
+        getBackgroundSound
     };
 })();
 
