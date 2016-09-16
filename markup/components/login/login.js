@@ -2,6 +2,8 @@ let login = (function () {
 
     let sessionID;
     let initData = {};
+    let savedFS = {};
+    let savedBonus = {};
 
     function parseWheels(string) {
         let wheelsMas = string.split('|').map((column) => {
@@ -106,6 +108,7 @@ let login = (function () {
         }
         utils.request('_Initialise', `/${userID}/${casinoID}/${gameID}`)
             .then((data) => {
+                // console.log('data', data);
                 sessionID = data.SessionID;
                 // console.log('Data:', data);
                 events.trigger('initStages', sessionID);
@@ -120,12 +123,30 @@ let login = (function () {
                 const linesString = data.Lines;
                 initData.lines = parseLines(linesString);
 
+                checkPlayerState(initData.PlayerState);
+
                 events.trigger('dataDownloaded', initData);
             });
     }
 
     function getInitData() {
         return utils.getData(initData);
+    }
+
+    function checkPlayerState(state) {
+        if (!state) return;
+        if (state.Saved.ResultType === 'Freespin') {
+            // Обработка оборванных фри-спинов
+            savedFS.count = state.Saved.RemainSpins;
+            savedFS.multi = state.Saved.Multiplier.MultiplierValue;
+            savedFS.level = state.Saved.Multiplier.MultiplierStep;
+            savedFS.currentWinCoins = state.Saved.CurrentTotalWinCoins;
+            savedFS.currentWinCents = state.Saved.CurrentTotalWinCents;
+            events.trigger('savedFS', savedFS);
+        } else if (state.Saved.ResultType === 'MultiplierBonus') {
+            // Обработка оборванных бонусов
+            // storage.log();
+        }
     }
 
     return {

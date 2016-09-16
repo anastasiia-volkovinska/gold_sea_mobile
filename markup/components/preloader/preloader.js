@@ -247,6 +247,7 @@ let preloader = ( function () {
         .call(function () {
             stage.removeAllChildren();
             backgroundSound = createjs.Sound.play('fon', {loop: -1});
+            events.trigger('preloaderDone');
             // console.log('Back sound', background);
         });
     }

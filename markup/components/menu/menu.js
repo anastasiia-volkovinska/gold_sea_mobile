@@ -458,6 +458,10 @@ let menu = (function () {
 
             historyButton.on('click', function () {
                 balance.error('Comming soon!');
+                createjs.Tween.get(overlay)
+                    .to({alpha: 0}, 300)
+                createjs.Tween.get(menuContainer)
+                    .to({x: 1280}, 300);
             });
 
             menuContainer.addChild(menuSettingsTitle, soundButton, soundText, musicButton, musicText, fastSpinButton, fastSpinText, handModeButton, handModeText, infoButton, infoText, historyButton, historyText);

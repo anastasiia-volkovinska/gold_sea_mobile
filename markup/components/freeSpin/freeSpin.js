@@ -10,6 +10,7 @@ let freeSpins = (function () {
     let fsTotalWinText;
     let stage;
     let fsTotalFreeSpins;
+    let savedFS;
 
     function drawFreeSpinsBG() {
         /* eslint-disable no-undef */
@@ -26,7 +27,13 @@ let freeSpins = (function () {
         let moveX = 60;
         let gameStage = canvas.getStages().gameStage;
 
-        fsTotalFreeSpins = 15;
+        if (savedFS) {
+            fsTotalFreeSpins = savedFS.count;
+
+        } else {
+            fsTotalFreeSpins = 15;
+        }
+
         let fsFreeSpinContainer = new createjs.Container().set({
             name: 'fsFreeSpinContainer',
             x: 515,
@@ -60,7 +67,15 @@ let freeSpins = (function () {
             textAlign: 'center',
             textBaseline: 'middle'
         });
-        fsTotalWinText = new createjs.Text('0', '32px bold Helvetica', '#1de4c3').set({
+
+        let totalWinNumber;
+        if (savedFS) {
+            totalWinNumber = savedFS.currentWinCoins + '';
+        } else {
+            totalWinNumber = '0';
+        }
+
+        fsTotalWinText = new createjs.Text(totalWinNumber, '32px bold Helvetica', '#1de4c3').set({
             name: 'fsTotalWinText',
             x: 100,
             y: 0,
@@ -569,6 +584,12 @@ let freeSpins = (function () {
     	vodolazContainer.mask = mask;
     	vodolazContainer.addChild(fon, verevka, onlyVodolaz, temnota, ramka, numbers, button, buttonText);
     	stage.addChildAt(vodolazContainer, stage.getChildByName('transitionBG'));
+        if (savedFS) {
+            for (var i = 0; i < savedFS.multi; i++) {
+                vodolazVniz();
+            }
+            savedFS.multi = false;
+        }
     }
     function vodolazVniz(){
     	let newButton = button.clone();
@@ -580,6 +601,10 @@ let freeSpins = (function () {
     	temnota.y += 40;
     	// verevka.y += 49;
     	// onlyVodolaz.y += 49;
+        if (savedFS.multi) {
+            verevka.y += 50;
+            onlyVodolaz.y += 50;
+        }
     	createjs.Tween.get(verevka)
     		.to({y: verevka.y + 40}, 1000, createjs.Ease.cubicIn);
     	createjs.Tween.get(onlyVodolaz)
@@ -606,6 +631,12 @@ let freeSpins = (function () {
     	chestContainer.addChild(bgChest, chest, glassChest, ramkaChest, numberChest, numberChestText);
     	chestContainer.set({name: 'chestContainer', x: 1160, y: 160});
     	stage.addChildAt(chestContainer, stage.getChildByName('transitionBG'));
+        if (savedFS) {
+            for (var i = 0; i < savedFS.level; i++) {
+                addNewChest();
+            }
+            savedFS.level = false;
+        }
     }
 
     function addNewChest(){
@@ -654,6 +685,18 @@ let freeSpins = (function () {
         }
     }
 
+    function saveFsData(data) {
+        savedFS = data;
+    }
+
+    function checkSavedFs() {
+        console.log('Preloader Done!');
+        if (savedFS) {
+            console.log('We have saved data!');
+            events.trigger('initFreeSpins', savedFS);
+        }
+    }
+
     function checkMulti(fsMulti){
         console.log('fsMulti:', fsMulti);
         console.log('numberofChests', numberofChests);
@@ -673,12 +716,15 @@ let freeSpins = (function () {
     events.on('multiplierBonus', addMultiBonus);
     events.on('checkVodolaz', checkVodolaz);
     events.on('checkMulti', checkMulti);
+    events.on('savedFS', saveFsData);
+    events.on('preloaderDone', checkSavedFs);
 
     return {
         initFreeSpins,
         stopFreeSpins,
         startFreeSpin,
         getWheels,
-        drawFreeSpinsBG
+        drawFreeSpinsBG,
+        vodolazVniz
     };
 })();

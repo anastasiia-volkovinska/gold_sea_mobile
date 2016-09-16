@@ -14,6 +14,8 @@ let balance = (function () {
 
     let balanceData = {};
 
+    let savedFsWin;
+
     let parameters = {
         font: 'bold 18px Helvetica',
         color: '#fff',
@@ -324,6 +326,19 @@ let balance = (function () {
             });
     }
 
+    function savedFS(data) {
+        savedFsWin = data.currentWinCents;
+    }
+
+    function writeSavedFsWin() {
+        console.log('I have to rewrite balance!');
+        if (savedFsWin) {
+            balanceData.winCash = (savedFsWin / 100).toFixed(2) + '';
+            console.log('Balance win:', balanceData.winCash);
+            updateBalance();
+        }
+    }
+
     /* eslint-disable */
     events.on('dataDownloaded', initBalance);
     // events.on('preloadComplete', error.bind(null, 'Wrong ID!'));
@@ -331,6 +346,8 @@ let balance = (function () {
     events.on('changeCoins', changeCoins);
     events.on('spinStart', spinStart);
     events.on('spinEnd', spinEnd);
+    events.on('savedFS', savedFS);
+    events.on('initFreeSpins', writeSavedFsWin);
     /* eslint-enable */
 
     return {
@@ -338,6 +355,7 @@ let balance = (function () {
         changeBet,
         changeCoins,
         writeBalance,
-        error
+        error,
+        writeSavedFsWin
     };
 })();
