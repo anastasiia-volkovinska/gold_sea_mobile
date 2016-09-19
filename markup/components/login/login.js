@@ -99,7 +99,7 @@ let login = (function () {
     }
     /* eslint-enable */
 
-    function initialize(userID = 2, casinoID = 2, gameID = 'sea') {
+    function initialize(userID = 2, casinoID = 2, gameID = 'qo5') {
         if (localStorage.getItem('userID')) {
             userID = localStorage.getItem('userID');
         }
